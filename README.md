@@ -1,0 +1,1 @@
+# eosio-java-abieos-serialization-provider
