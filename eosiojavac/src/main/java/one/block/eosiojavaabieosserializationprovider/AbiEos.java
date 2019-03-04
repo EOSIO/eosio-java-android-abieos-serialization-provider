@@ -1,0 +1,257 @@
+package one.block.eosiojavaabieosserializationprovider;
+
+import android.content.Context;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import android.util.Log;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.util.Map;
+
+public class AbiEos {
+    static {
+        System.loadLibrary("abieos-lib");
+    }
+
+    public native String stringFromAbiEos();
+    public native ByteBuffer create();
+    public native void destroy(ByteBuffer context);
+    public native String getError(ByteBuffer context);
+    public native int getBinSize(ByteBuffer context);
+    public native ByteBuffer getBinData(ByteBuffer context);
+    public native String getBinHex(ByteBuffer context);
+    public native long stringToName(ByteBuffer context, String str);
+    public native String nameToString(ByteBuffer context, long name);
+    public native boolean setAbi(ByteBuffer context, long contract, String abi);
+    public native boolean jsonToBin(ByteBuffer context, long contract, String type, String json, boolean reorderable);
+    public native String hexToJson(ByteBuffer context, long contract, String type, String hex);
+    public native String getTypeForAction(ByteBuffer context, long contract, long action);
+
+    private ByteBuffer context;
+    private Context androidContext;
+
+    private String TAG = "AbiEos";
+
+    public AbiEos(@NonNull Context androidContext) {
+        this.androidContext = androidContext;
+        context = create();
+        if (null == context) {
+            throw new AbiEosContextError("Could not create abieos context.");
+        }
+    }
+
+    public void destroyContext() {
+        if (null != context) {
+            destroy(context);
+            context = null;
+        }
+    }
+
+    public long stringToName64(@Nullable String str) {
+        if (null == context) throw new AbiEosContextError("Null context!  Has destroyContext() already been called?");
+        return stringToName(context, str);
+    }
+
+    @NonNull
+    public String name64ToString(long name) {
+        if (null == context) throw new AbiEosContextError("Null context!  Has destroyContext() already been called?");
+        return nameToString(context, name);
+    }
+
+    @Nullable
+    public String error() {
+        if (null == context) throw new AbiEosContextError("Null context!  Has destroyContext() already been called?");
+        return getError(context);
+    }
+
+    @NonNull
+    public String jsonToHex(@Nullable String contract,
+                            @NonNull String json,
+                            @Nullable Map<String, Object> abi,
+                            boolean isReorderable) throws EosioError {
+        return jsonToHex(contract, "", null, json, abi, isReorderable);
+    }
+
+    @NonNull
+    public String jsonToHex(@Nullable String contract,
+                            @NonNull String name,
+                            @Nullable String type,
+                            @NonNull String json,
+                            @Nullable Map<String, Object> abi,
+                            boolean isReorderable) throws EosioError {
+        String abiString = JsonUtils.jsonString(abi);
+        return jsonToHex(contract, name, type, json, abi, isReorderable);
+    }
+
+    @NonNull
+    public String jsonToHex(@Nullable String contract,
+                            @NonNull String json,
+                            @Nullable String abi,
+                            boolean isReorderable) throws EosioError {
+        return jsonToHex(contract, "", null, json, abi, isReorderable);
+    }
+
+    @NonNull
+    public String jsonToHex(@Nullable String contract,
+                            @NonNull String name,
+                            @Nullable String type,
+                            @NonNull String json,
+                            @Nullable String abi,
+                            boolean isReorderable) throws EosioError {
+
+        if (null == context) throw new AbiEosContextError("Null context!  Has destroyContext() already been called?");
+
+        long contract64 = stringToName64(contract);
+
+        String abiJsonString = getAbiJsonString(contract, name, abi);
+
+        boolean result = setAbi(context, contract64, abiJsonString);
+        if (result == false) {
+            String err = error();
+            String errMsg = String.format("Json to hex == Unable to set ABI. %s", err == null ? "" : err);
+            throw new EosioError(EosioErrorCode.vaultError, errMsg);
+        }
+
+        String typeStr = type == null ? getType(name, contract64) : type;
+        if (typeStr == null) {
+            String err = error();
+            String errMsg = String.format("Unable to find type for action %s. %s", name, err == null ? "" : err);
+            throw new EosioError(EosioErrorCode.vaultError, errMsg);
+        }
+
+        boolean jsonToBinResult = jsonToBin(context, contract64, typeStr, json, isReorderable);
+
+        if (jsonToBinResult == false) {
+            String err = error();
+            String errMsg = String.format("Unable to pack json to bin. %s", err == null ? "" : err);
+            throw new EosioError(EosioErrorCode.vaultError, errMsg);
+        }
+
+        String hex = getBinHex(context);
+        if (hex == null) {
+            throw new EosioError(EosioErrorCode.vaultError, "Unable to convert binary to hex.");
+        }
+
+        return hex;
+
+    }
+
+    @NonNull
+    public String hexToJson(@Nullable String contract,
+                            @NonNull String hex,
+                            @Nullable Map<String, Object> abi) throws EosioError {
+        return hexToJson(contract, "", null, hex, abi);
+    }
+
+    @NonNull
+    public String hexToJson(@Nullable String contract,
+                            @NonNull String name,
+                            @Nullable String type,
+                            @NonNull String hex,
+                            @Nullable Map<String, Object> abi) throws EosioError {
+        String abiStr = JsonUtils.jsonString(abi);
+        return hexToJson(contract, name, type, hex, abiStr);
+    }
+
+    @NonNull
+    public String hexToJson(@Nullable String contract,
+                            @NonNull String hex,
+                            @Nullable String abi) throws EosioError {
+        return hexToJson(contract, "", null, hex, abi);
+    }
+
+    @NonNull
+    public String hexToJson(@Nullable String contract,
+                            @NonNull String name,
+                            @Nullable String type,
+                            @NonNull String hex,
+                            @Nullable String abi) throws EosioError {
+
+        if (null == context) throw new AbiEosContextError("Null context!  Has destroyContext() already been called?");
+
+        long contract64 = stringToName64(contract);
+        String abiJsonString = getAbiJsonString(contract, name, abi);
+
+        boolean result = setAbi(context, contract64, abiJsonString);
+        if (result == false) {
+            String err = error();
+            String errMsg = String.format("Hex to Json == Unable to set ABI. %s", err == null ? "" : err);
+            throw new EosioError(EosioErrorCode.vaultError, errMsg);
+        }
+
+        String typeStr = type == null ? getType(name, contract64) : type;
+        if (typeStr == null) {
+            String err = error();
+            String errMsg = String.format("Unable to find type for action %s. %s", name, err == null ? "" : err);
+            throw new EosioError(EosioErrorCode.vaultError, errMsg);
+        }
+
+        String jsonStr = hexToJson(context, contract64, typeStr, hex);
+        if (jsonStr == null) {
+            String err = error();
+            String errMsg = String.format("Unable to unpack hex to json. %s", err == null ? "" : err);
+            throw new EosioError(EosioErrorCode.vaultError, errMsg);
+        }
+
+        return jsonStr;
+
+    }
+
+    @NonNull
+    private String getAbiJsonString(@Nullable String contract, @NonNull String name, @Nullable String abi)  throws EosioError {
+
+        String abiString = (abi != null && !abi.trim().isEmpty()) ? abi : "";
+
+        if (abiString.endsWith("abi.json")) {
+            String resourceString = abiString.replace('.', '_');
+            int resourceId = androidContext.getResources().getIdentifier(resourceString, "raw", androidContext.getPackageName());
+            InputStream inputStream = androidContext.getResources().openRawResource(resourceId);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+            int ctr;
+            try {
+                ctr = inputStream.read();
+                while (ctr != -1) {
+                    byteArrayOutputStream.write(ctr);
+                    ctr = inputStream.read();
+                }
+                inputStream.close();
+                abiString = byteArrayOutputStream.toString();
+            } catch (IOException e) {
+                Log.e(TAG, "Error reading abi json resource", e);
+            }
+        }
+
+        if (abiString.isEmpty()) {
+            throw new EosioError(EosioErrorCode.vaultError, String.format("Json to hex -- No ABI provided for %s %s",
+                    contract == null ? contract : "",
+                    name));
+        }
+
+        return abiString;
+
+    }
+
+    @NonNull
+    private String getAbiJsonString(@Nullable String contract,
+                                    @NonNull String name,
+                                    @Nullable Map<String, Object> abi) throws EosioError {
+        String abiString = JsonUtils.jsonString(abi);
+        if (abiString == null) {
+            throw new EosioError(EosioErrorCode.vaultError, String.format("Json to hex -- No ABI provided for %s %s",
+                    contract == null ? contract : "",
+                    name));
+        }
+        return abiString;
+    }
+
+    @Nullable
+    private String getType(@NonNull String action, long contract) {
+        long action64 = stringToName64(action);
+        return getTypeForAction(context, contract, action64);
+    }
+
+}
