@@ -1,4 +1,4 @@
-package one.block.testeosiojavac;
+package one.block.testeosiojavaabieos;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;

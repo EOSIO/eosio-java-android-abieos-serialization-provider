@@ -1,4 +1,4 @@
-package one.block.testeosiojavac;
+package one.block.testeosiojavaabieos;
 
 import androidx.test.runner.AndroidJUnit4;
 import one.block.eosiojavaabieosserializationprovider.AbiEos;
