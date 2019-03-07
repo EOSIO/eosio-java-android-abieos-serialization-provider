@@ -12,8 +12,13 @@ import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 
+// At this point its not possible to run these as normal unit tests even though the context
+// access to pick up the abi json as resources has been removed.  This is because we are
+// using the NDK to compile the abieos c++ code, which results in shared libraries that need
+// android to run.
+
 @RunWith(AndroidJUnit4.class)
-public class AbiEosTest {
+public class AbiEosInstrumentedTest {
 
     private AbiEos abieos = null;
 
