@@ -1,4 +1,4 @@
-package one.block.testeosiojavac;
+package one.block.testeosiojavaabieos;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Example of a call to a native method
         TextView tv = findViewById(R.id.sample_text);
-        AbiEos abiEos = new AbiEos(this);
+        AbiEos abiEos = new AbiEos();
         String contractStrOrig = "eosio.assert";
         long name64 = abiEos.stringToName64(contractStrOrig);
         String testStr = abiEos.name64ToString(name64);
