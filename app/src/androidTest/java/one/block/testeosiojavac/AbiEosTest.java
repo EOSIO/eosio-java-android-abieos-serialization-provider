@@ -1,7 +1,5 @@
 package one.block.testeosiojavac;
 
-import android.content.Context;
-import androidx.test.InstrumentationRegistry;
 import androidx.test.runner.AndroidJUnit4;
 import one.block.eosiojavaabieosserializationprovider.AbiEos;
 import one.block.eosiojavaabieosserializationprovider.AbiEosContextError;
@@ -18,19 +16,16 @@ import static org.junit.Assert.*;
 public class AbiEosTest {
 
     private AbiEos abieos = null;
-    private Context appContext = null;
 
     @Before
     public void setUp() {
-        appContext = InstrumentationRegistry.getTargetContext();
-        abieos = new AbiEos(appContext);
+        abieos = new AbiEos();
     }
 
     @After
     public void tearDown() {
         abieos.destroyContext();
         abieos = null;
-        appContext = null;
     }
 
     @Test

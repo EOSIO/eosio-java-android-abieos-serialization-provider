@@ -1,13 +1,9 @@
 package one.block.eosiojavaabieosserializationprovider;
 
-import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.util.Log;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.Map;
 
@@ -31,12 +27,10 @@ public class AbiEos {
     public native String getTypeForAction(ByteBuffer context, long contract, long action);
 
     private ByteBuffer context;
-    private Context androidContext;
 
     private String TAG = "AbiEos";
 
-    public AbiEos(@NonNull Context androidContext) {
-        this.androidContext = androidContext;
+    public AbiEos() {
         context = create();
         if (null == context) {
             throw new AbiEosContextError("Could not create abieos context.");
@@ -206,22 +200,12 @@ public class AbiEos {
         String abiString = (abi != null && !abi.trim().isEmpty()) ? abi : "";
 
         if (abiString.endsWith("abi.json")) {
-            String resourceString = abiString.replace('.', '_');
-            int resourceId = androidContext.getResources().getIdentifier(resourceString, "raw", androidContext.getPackageName());
-            InputStream inputStream = androidContext.getResources().openRawResource(resourceId);
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-
-            int ctr;
-            try {
-                ctr = inputStream.read();
-                while (ctr != -1) {
-                    byteArrayOutputStream.write(ctr);
-                    ctr = inputStream.read();
-                }
-                inputStream.close();
-                abiString = byteArrayOutputStream.toString();
-            } catch (IOException e) {
-                Log.e(TAG, "Error reading abi json resource", e);
+            Map<String, String>jsonMap = AbiEosJson.abiEosJsonMap;
+            if (jsonMap.containsKey(abiString)) {
+                abiString = jsonMap.get(abiString);
+            } else {
+                Log.e(TAG, "Error, no json in map for: " + abiString);
+                abiString = "";
             }
         }
 
