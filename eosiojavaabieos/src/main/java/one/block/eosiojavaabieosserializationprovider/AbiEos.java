@@ -6,6 +6,8 @@ import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.util.Map;
+import one.block.eosiojava.EosioError;
+import one.block.eosiojava.EosioErrorCode;
 
 public class AbiEos {
     static {

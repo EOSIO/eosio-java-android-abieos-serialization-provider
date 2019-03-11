@@ -1,9 +1,9 @@
 package one.block.testeosiojavaabieos;
 
 import androidx.test.runner.AndroidJUnit4;
+import one.block.eosiojava.EosioError;
 import one.block.eosiojavaabieosserializationprovider.AbiEos;
 import one.block.eosiojavaabieosserializationprovider.AbiEosContextError;
-import one.block.eosiojavaabieosserializationprovider.EosioError;
 
 import org.junit.After;
 import org.junit.Before;
