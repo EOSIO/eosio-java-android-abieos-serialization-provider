@@ -1,9 +1,9 @@
 package one.block.eosiojavaabieosserializationprovider;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.util.Log;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,7 +12,7 @@ import java.util.Map;
 public class JsonUtils {
 
     @Nullable
-    public static String jsonString(@NonNull Map<String, Object> map) {
+    public static String jsonString(@NotNull Map<String, Object> map) {
         try {
             JSONObject json = getJsonFromMap(map);
             return json.toString();
@@ -22,8 +22,8 @@ public class JsonUtils {
         }
     }
 
-    @NonNull
-    public static JSONObject getJsonFromMap(@NonNull Map<String, Object> map) throws JSONException {
+    @NotNull
+    public static JSONObject getJsonFromMap(@NotNull Map<String, Object> map) throws JSONException {
         JSONObject jsonData = new JSONObject();
         for (String key : map.keySet()) {
             Object value = map.get(key);

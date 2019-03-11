@@ -1,7 +1,7 @@
 package one.block.eosiojavaabieosserializationprovider;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import android.util.Log;
 
 import java.nio.ByteBuffer;
@@ -51,7 +51,7 @@ public class AbiEos {
         return stringToName(context, str);
     }
 
-    @NonNull
+    @NotNull
     public String name64ToString(long name) {
         if (null == context) throw new AbiEosContextError("Null context!  Has destroyContext() already been called?");
         return nameToString(context, name);
@@ -63,38 +63,38 @@ public class AbiEos {
         return getError(context);
     }
 
-    @NonNull
+    @NotNull
     public String jsonToHex(@Nullable String contract,
-                            @NonNull String json,
+                            @NotNull String json,
                             @Nullable Map<String, Object> abi,
                             boolean isReorderable) throws EosioError {
         return jsonToHex(contract, "", null, json, abi, isReorderable);
     }
 
-    @NonNull
+    @NotNull
     public String jsonToHex(@Nullable String contract,
-                            @NonNull String name,
+                            @NotNull String name,
                             @Nullable String type,
-                            @NonNull String json,
+                            @NotNull String json,
                             @Nullable Map<String, Object> abi,
                             boolean isReorderable) throws EosioError {
         String abiString = JsonUtils.jsonString(abi);
         return jsonToHex(contract, name, type, json, abi, isReorderable);
     }
 
-    @NonNull
+    @NotNull
     public String jsonToHex(@Nullable String contract,
-                            @NonNull String json,
+                            @NotNull String json,
                             @Nullable String abi,
                             boolean isReorderable) throws EosioError {
         return jsonToHex(contract, "", null, json, abi, isReorderable);
     }
 
-    @NonNull
+    @NotNull
     public String jsonToHex(@Nullable String contract,
-                            @NonNull String name,
+                            @NotNull String name,
                             @Nullable String type,
-                            @NonNull String json,
+                            @NotNull String json,
                             @Nullable String abi,
                             boolean isReorderable) throws EosioError {
 
@@ -135,35 +135,35 @@ public class AbiEos {
 
     }
 
-    @NonNull
+    @NotNull
     public String hexToJson(@Nullable String contract,
-                            @NonNull String hex,
+                            @NotNull String hex,
                             @Nullable Map<String, Object> abi) throws EosioError {
         return hexToJson(contract, "", null, hex, abi);
     }
 
-    @NonNull
+    @NotNull
     public String hexToJson(@Nullable String contract,
-                            @NonNull String name,
+                            @NotNull String name,
                             @Nullable String type,
-                            @NonNull String hex,
+                            @NotNull String hex,
                             @Nullable Map<String, Object> abi) throws EosioError {
         String abiStr = JsonUtils.jsonString(abi);
         return hexToJson(contract, name, type, hex, abiStr);
     }
 
-    @NonNull
+    @NotNull
     public String hexToJson(@Nullable String contract,
-                            @NonNull String hex,
+                            @NotNull String hex,
                             @Nullable String abi) throws EosioError {
         return hexToJson(contract, "", null, hex, abi);
     }
 
-    @NonNull
+    @NotNull
     public String hexToJson(@Nullable String contract,
-                            @NonNull String name,
+                            @NotNull String name,
                             @Nullable String type,
-                            @NonNull String hex,
+                            @NotNull String hex,
                             @Nullable String abi) throws EosioError {
 
         if (null == context) throw new AbiEosContextError("Null context!  Has destroyContext() already been called?");
@@ -196,8 +196,8 @@ public class AbiEos {
 
     }
 
-    @NonNull
-    private String getAbiJsonString(@Nullable String contract, @NonNull String name, @Nullable String abi)  throws EosioError {
+    @NotNull
+    private String getAbiJsonString(@Nullable String contract, @NotNull String name, @Nullable String abi)  throws EosioError {
 
         String abiString = (abi != null && !abi.trim().isEmpty()) ? abi : "";
 
@@ -221,9 +221,9 @@ public class AbiEos {
 
     }
 
-    @NonNull
+    @NotNull
     private String getAbiJsonString(@Nullable String contract,
-                                    @NonNull String name,
+                                    @NotNull String name,
                                     @Nullable Map<String, Object> abi) throws EosioError {
         String abiString = JsonUtils.jsonString(abi);
         if (abiString == null) {
@@ -235,7 +235,7 @@ public class AbiEos {
     }
 
     @Nullable
-    private String getType(@NonNull String action, long contract) {
+    private String getType(@NotNull String action, long contract) {
         long action64 = stringToName64(action);
         return getTypeForAction(context, contract, action64);
     }
