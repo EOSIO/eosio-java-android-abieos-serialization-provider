@@ -1,1 +1,3 @@
 include ':app', ':eosiojavaabieos'
+include 'eosiojava'
+project(':eosiojava').projectDir = new File('../eosio-java/eosiojava/')
