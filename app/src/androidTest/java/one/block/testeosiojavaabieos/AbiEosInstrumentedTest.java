@@ -6,6 +6,7 @@ import one.block.eosiojavaabieosserializationprovider.AbiEos;
 import one.block.eosiojavaabieosserializationprovider.AbiEosContextError;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,15 +21,10 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public class AbiEosInstrumentedTest {
 
-    private AbiEos abieos = null;
+    private static AbiEos abieos = new AbiEos();
 
-    @Before
-    public void setUp() {
-        abieos = new AbiEos();
-    }
-
-    @After
-    public void tearDown() {
+    @AfterClass
+    public static void endTearDown() {
         abieos.destroyContext();
         abieos = null;
     }

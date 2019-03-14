@@ -98,7 +98,9 @@ public class AbiEos {
                             @Nullable String abi,
                             boolean isReorderable) throws EosioError {
 
-        if (null == context) throw new AbiEosContextError("Null context!  Has destroyContext() already been called?");
+        // refreshContext() will throw an error if it can't create the context so we don't need
+        // to check it explicitly before this.
+        refreshContext();
 
         long contract64 = stringToName64(contract);
 
@@ -166,7 +168,9 @@ public class AbiEos {
                             @NotNull String hex,
                             @Nullable String abi) throws EosioError {
 
-        if (null == context) throw new AbiEosContextError("Null context!  Has destroyContext() already been called?");
+        // refreshContext() will throw an error if it can't create the context so we don't need
+        // to check it explicitly before this.
+        refreshContext();
 
         long contract64 = stringToName64(contract);
         String abiJsonString = getAbiJsonString(contract, name, abi);
@@ -194,6 +198,14 @@ public class AbiEos {
 
         return jsonStr;
 
+    }
+
+    private void refreshContext() {
+        destroyContext();
+        context = create();
+        if (null == context) {
+            throw new AbiEosContextError("Could not create abieos context.");
+        }
     }
 
     @NotNull
