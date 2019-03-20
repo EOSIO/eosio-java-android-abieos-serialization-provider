@@ -1,5 +1,7 @@
 package one.block.eosiojavaabieosserializationprovider;
 
+import one.block.eosiojava.interfaces.ISerializationProvider;
+import one.block.eosiojava.models.AbiEosSerializationObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import android.util.Log;
@@ -9,7 +11,7 @@ import java.util.Map;
 import one.block.eosiojava.EosioError;
 import one.block.eosiojava.EosioErrorCode;
 
-public class AbiEos {
+public class AbiEos implements ISerializationProvider {
     static {
         System.loadLibrary("abieos-lib");
     }
@@ -32,10 +34,12 @@ public class AbiEos {
 
     private String TAG = "AbiEos";
 
-    public AbiEos() {
+    public AbiEos() throws EosioError {
         context = create();
         if (null == context) {
-            throw new AbiEosContextError("Could not create abieos context.");
+            EosioError eosioError = new EosioError(EosioErrorCode.serializationError, "Serialization provider context error.");
+            eosioError.originalError = new AbiEosContextError("Could not create abieos context.");
+            throw eosioError;
         }
     }
 
@@ -63,187 +67,176 @@ public class AbiEos {
         return getError(context);
     }
 
-    @NotNull
-    public String jsonToHex(@Nullable String contract,
-                            @NotNull String json,
-                            @Nullable Map<String, Object> abi,
-                            boolean isReorderable) throws EosioError {
-        return jsonToHex(contract, "", null, json, abi, isReorderable);
-    }
-
-    @NotNull
-    public String jsonToHex(@Nullable String contract,
-                            @NotNull String name,
-                            @Nullable String type,
-                            @NotNull String json,
-                            @Nullable Map<String, Object> abi,
-                            boolean isReorderable) throws EosioError {
-        String abiString = JsonUtils.jsonString(abi);
-        return jsonToHex(contract, name, type, json, abi, isReorderable);
-    }
-
-    @NotNull
-    public String jsonToHex(@Nullable String contract,
-                            @NotNull String json,
-                            @Nullable String abi,
-                            boolean isReorderable) throws EosioError {
-        return jsonToHex(contract, "", null, json, abi, isReorderable);
-    }
-
-    @NotNull
-    public String jsonToHex(@Nullable String contract,
-                            @NotNull String name,
-                            @Nullable String type,
-                            @NotNull String json,
-                            @Nullable String abi,
-                            boolean isReorderable) throws EosioError {
+    public void serialize(@NotNull AbiEosSerializationObject serializationObject)
+            throws EosioError {
 
         // refreshContext() will throw an error if it can't create the context so we don't need
         // to check it explicitly before this.
         refreshContext();
 
-        long contract64 = stringToName64(contract);
+        if (serializationObject.json.isEmpty()) {
+            throw new EosioError(EosioErrorCode.serializationError, "No content to serialize.");
+        }
 
-        String abiJsonString = getAbiJsonString(contract, name, abi);
+        long contract64 = stringToName64(serializationObject.contract);
 
-        boolean result = setAbi(context, contract64, abiJsonString);
+        if (serializationObject.abi.isEmpty()) {
+            throw new EosioError(EosioErrorCode.vaultError, String.format("Json to hex -- No ABI provided for %s %s",
+                    serializationObject.contract == null ? serializationObject.contract : "",
+                    serializationObject.name));
+        }
+
+        boolean result = setAbi(context, contract64, serializationObject.abi);
         if (result == false) {
             String err = error();
             String errMsg = String.format("Json to hex == Unable to set ABI. %s", err == null ? "" : err);
-            throw new EosioError(EosioErrorCode.vaultError, errMsg);
+            throw new EosioError(EosioErrorCode.serializationError, errMsg);
         }
 
-        String typeStr = type == null ? getType(name, contract64) : type;
+        String typeStr = serializationObject.type == null ?
+                getType(serializationObject.name, contract64) : serializationObject.type;
         if (typeStr == null) {
             String err = error();
-            String errMsg = String.format("Unable to find type for action %s. %s", name, err == null ? "" : err);
-            throw new EosioError(EosioErrorCode.vaultError, errMsg);
+            String errMsg = String.format("Unable to find type for action %s. %s",
+                    serializationObject.name, err == null ? "" : err);
+            throw new EosioError(EosioErrorCode.serializationError, errMsg);
         }
 
-        boolean jsonToBinResult = jsonToBin(context, contract64, typeStr, json, isReorderable);
+        boolean jsonToBinResult = jsonToBin(context,
+                contract64,
+                typeStr,
+                serializationObject.json,
+                true);
 
         if (jsonToBinResult == false) {
             String err = error();
             String errMsg = String.format("Unable to pack json to bin. %s", err == null ? "" : err);
-            throw new EosioError(EosioErrorCode.vaultError, errMsg);
+            throw new EosioError(EosioErrorCode.serializationError, errMsg);
         }
 
         String hex = getBinHex(context);
         if (hex == null) {
-            throw new EosioError(EosioErrorCode.vaultError, "Unable to convert binary to hex.");
+            throw new EosioError(EosioErrorCode.serializationError, "Unable to convert binary to hex.");
         }
 
-        return hex;
+        serializationObject.hex = hex;
+        return;
 
     }
 
     @NotNull
-    public String hexToJson(@Nullable String contract,
-                            @NotNull String hex,
-                            @Nullable Map<String, Object> abi) throws EosioError {
-        return hexToJson(contract, "", null, hex, abi);
+    public String serializeTransaction(String json) throws EosioError {
+        String abi = getAbiJsonString("transaction.abi.json");
+        AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null,
+                "", "transaction", abi);
+        serialize(serializationObject);
+        return serializationObject.hex;
     }
 
     @NotNull
-    public String hexToJson(@Nullable String contract,
-                            @NotNull String name,
-                            @Nullable String type,
-                            @NotNull String hex,
-                            @Nullable Map<String, Object> abi) throws EosioError {
-        String abiStr = JsonUtils.jsonString(abi);
-        return hexToJson(contract, name, type, hex, abiStr);
+    public String serializeAbi(String json) throws EosioError {
+        String abi = getAbiJsonString("abi.abi.json");
+        AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null,
+                "", "abi_def", abi);
+        serialize(serializationObject);
+        return serializationObject.hex;
     }
 
-    @NotNull
-    public String hexToJson(@Nullable String contract,
-                            @NotNull String hex,
-                            @Nullable String abi) throws EosioError {
-        return hexToJson(contract, "", null, hex, abi);
-    }
-
-    @NotNull
-    public String hexToJson(@Nullable String contract,
-                            @NotNull String name,
-                            @Nullable String type,
-                            @NotNull String hex,
-                            @Nullable String abi) throws EosioError {
+    public void deserialize(@NotNull AbiEosSerializationObject deserilizationObject) throws EosioError {
 
         // refreshContext() will throw an error if it can't create the context so we don't need
         // to check it explicitly before this.
         refreshContext();
 
-        long contract64 = stringToName64(contract);
-        String abiJsonString = getAbiJsonString(contract, name, abi);
+        if (deserilizationObject.hex.isEmpty()) {
+            throw new EosioError(EosioErrorCode.deserializationError, "No content to serialize.");
+        }
 
-        boolean result = setAbi(context, contract64, abiJsonString);
+        long contract64 = stringToName64(deserilizationObject.contract);
+
+        if (deserilizationObject.abi.isEmpty()) {
+            throw new EosioError(EosioErrorCode.vaultError, String.format("Json to hex -- No ABI provided for %s %s",
+                    deserilizationObject.contract == null ? deserilizationObject.contract : "",
+                    deserilizationObject.name));
+        }
+
+        boolean result = setAbi(context, contract64, deserilizationObject.abi);
         if (result == false) {
             String err = error();
             String errMsg = String.format("Hex to Json == Unable to set ABI. %s", err == null ? "" : err);
-            throw new EosioError(EosioErrorCode.vaultError, errMsg);
+            throw new EosioError(EosioErrorCode.deserializationError, errMsg);
         }
 
-        String typeStr = type == null ? getType(name, contract64) : type;
+        String typeStr = deserilizationObject.type == null ?
+                getType(deserilizationObject.name, contract64) : deserilizationObject.type;
         if (typeStr == null) {
             String err = error();
-            String errMsg = String.format("Unable to find type for action %s. %s", name, err == null ? "" : err);
-            throw new EosioError(EosioErrorCode.vaultError, errMsg);
+            String errMsg = String.format("Unable to find type for action %s. %s",
+                    deserilizationObject.name, err == null ? "" : err);
+            throw new EosioError(EosioErrorCode.deserializationError, errMsg);
         }
 
-        String jsonStr = hexToJson(context, contract64, typeStr, hex);
+        String jsonStr = hexToJson(context, contract64, typeStr, deserilizationObject.hex);
         if (jsonStr == null) {
             String err = error();
             String errMsg = String.format("Unable to unpack hex to json. %s", err == null ? "" : err);
-            throw new EosioError(EosioErrorCode.vaultError, errMsg);
+            throw new EosioError(EosioErrorCode.deserializationError, errMsg);
         }
 
-        return jsonStr;
+        deserilizationObject.json = jsonStr;
+
+        return;
 
     }
 
-    private void refreshContext() {
+    @NotNull
+    public String deserializeTransaction(String hex) throws EosioError {
+        String abi = getAbiJsonString("transaction.abi.json");
+        AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null,
+                "", "transaction", abi);
+        deserialize(serializationObject);
+        return serializationObject.json;
+    }
+
+    @NotNull
+    public String deserializeAbi(String json) throws EosioError {
+        String abi = getAbiJsonString("abi.abi.json");
+        AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null,
+                "", "abi_def", abi);
+        serialize(serializationObject);
+        return serializationObject.json;
+    }
+
+    private void refreshContext() throws EosioError {
         destroyContext();
         context = create();
         if (null == context) {
-            throw new AbiEosContextError("Could not create abieos context.");
+            EosioError eosioError = new EosioError(EosioErrorCode.serializationError, "Serialization provider context error.");
+            eosioError.originalError = new AbiEosContextError("Could not create abieos context.");
+            throw eosioError;
         }
     }
 
     @NotNull
-    private String getAbiJsonString(@Nullable String contract, @NotNull String name, @Nullable String abi)  throws EosioError {
+    private String getAbiJsonString(@NotNull String abi)  throws EosioError {
 
-        String abiString = (abi != null && !abi.trim().isEmpty()) ? abi : "";
+        String abiString;
 
-        if (abiString.endsWith("abi.json")) {
-            Map<String, String>jsonMap = AbiEosJson.abiEosJsonMap;
-            if (jsonMap.containsKey(abiString)) {
-                abiString = jsonMap.get(abiString);
-            } else {
-                Log.e(TAG, "Error, no json in map for: " + abiString);
-                abiString = "";
-            }
+        Map<String, String>jsonMap = AbiEosJson.abiEosJsonMap;
+        if (jsonMap.containsKey(abi)) {
+            abiString = jsonMap.get(abi);
+        } else {
+            Log.e(TAG, "Error, no json in map for: " + abi);
+            abiString = "";
         }
 
-        if (abiString.isEmpty()) {
-            throw new EosioError(EosioErrorCode.vaultError, String.format("Json to hex -- No ABI provided for %s %s",
-                    contract == null ? contract : "",
-                    name));
+        if (abiString == null || abiString.isEmpty()) {
+            throw new EosioError(EosioErrorCode.serializationError, String.format("Serialization Provider -- No ABI found for %s",
+                    abi));
         }
 
         return abiString;
 
-    }
-
-    @NotNull
-    private String getAbiJsonString(@Nullable String contract,
-                                    @NotNull String name,
-                                    @Nullable Map<String, Object> abi) throws EosioError {
-        String abiString = JsonUtils.jsonString(abi);
-        if (abiString == null) {
-            throw new EosioError(EosioErrorCode.vaultError, String.format("Json to hex -- No ABI provided for %s %s",
-                    contract == null ? contract : "",
-                    name));
-        }
-        return abiString;
     }
 
     @Nullable
