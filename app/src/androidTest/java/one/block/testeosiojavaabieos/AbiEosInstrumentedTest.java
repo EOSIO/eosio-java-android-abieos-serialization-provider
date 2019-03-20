@@ -2,12 +2,14 @@ package one.block.testeosiojavaabieos;
 
 import androidx.test.runner.AndroidJUnit4;
 import one.block.eosiojava.EosioError;
+import one.block.eosiojava.models.AbiEosSerializationObject;
 import one.block.eosiojavaabieosserializationprovider.AbiEos;
 import one.block.eosiojavaabieosserializationprovider.AbiEosContextError;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -21,29 +23,22 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public class AbiEosInstrumentedTest {
 
-    private static AbiEos abieos = new AbiEos();
+    private static AbiEos abieos;
+
+    @BeforeClass
+    public static void startSetup() {
+        try {
+            abieos = new AbiEos();
+        } catch (EosioError eosioError) {
+            eosioError.printStackTrace();
+            fail();
+        }
+    }
 
     @AfterClass
     public static void endTearDown() {
         abieos.destroyContext();
         abieos = null;
-    }
-
-    @Test
-    public void jsonToHexManifest() {
-        String json = "{\"account\":\"todd\",\"appmeta\":\"https:\\/\\/transfer.toddbowden.com\\/app-metadata.json#67d86954bc3ff7928a55df717b31b732c8ec48e00b2efffd6d493acc8413b7bb\",\"hash\":\"\",\"domain\":\"transfer.toddbowden.com\",\"hex\":\"\",\"whitelist\":[{\"contract\":\"eosio.token\",\"action\":\"transfer\"}]}";
-        String hexResult = "00000000009012CD177472616E736665722E746F6464626F7764656E2E636F6D7268747470733A2F2F7472616E736665722E746F6464626F7764656E2E636F6D2F6170702D6D657461646174612E6A736F6E23363764383639353462633366663739323861353564663731376233316237333263386563343865303062326566666664366434393361636338343133623762620100A6823403EA3055000000572D3CCDCD";
-
-        String hex = null;
-
-        try {
-            hex = abieos.jsonToHex(null, "", "manifest", json, "eosio.assert.abi.json", true);
-        } catch (EosioError eosioError) {
-            eosioError.printStackTrace();
-        }
-
-        assertNotNull(hex);
-        assertEquals(hex, hexResult);
     }
 
     @Test
@@ -54,7 +49,7 @@ public class AbiEosInstrumentedTest {
         String json = null;
 
         try {
-            json = abieos.hexToJson(null, "", "abi_def", hex, "abi.abi.json");
+            json = abieos.deserializeAbi(hex);
         } catch (EosioError eosioError) {
             eosioError.printStackTrace();
         }
@@ -72,7 +67,7 @@ public class AbiEosInstrumentedTest {
         String json = null;
 
         try {
-            json = abieos.hexToJson(null, "", "transaction", hex, "transaction.abi.json");
+            json = abieos.deserializeTransaction(hex);
         } catch (EosioError eosioError) {
             eosioError.printStackTrace();
         }
@@ -91,61 +86,10 @@ public class AbiEosInstrumentedTest {
         String json = null;
 
         try {
-            json = abieos.hexToJson("eosio.token", "transfer", null, hex, abi);
-        } catch (EosioError eosioError) {
-            eosioError.printStackTrace();
-        }
-
-        assertNotNull(json);
-        assertEquals(json, jsonResult);
-
-    }
-
-    @Test
-    public void jsonToHexAssert() {
-        String json = "{\"chain_id\":\"687fa513e18843ad3e820744f4ffcf93b1354036d80737db8dc444fe4b15ad17\",\"chain_name\":\"b1 Testnet\",\"icon\":\"4720078c233754482699678cbf8e75b0b671596f794904a5a788515517f04ee3\"}";
-
-        String hexResult = "687FA513E18843AD3E820744F4FFCF93B1354036D80737DB8DC444FE4B15AD170A623120546573746E65744720078C233754482699678CBF8E75B0B671596F794904A5A788515517F04EE3";
-
-        String hex = null;
-
-        try {
-            hex = abieos.jsonToHex("eosio.assert", "", "chain_params", json, "eosio.assert.abi.json", true);
-        } catch (EosioError eosioError) {
-            eosioError.printStackTrace();
-        }
-
-        assertNotNull(hex);
-        assertEquals(hex, hexResult);
-    }
-
-    @Test
-    public void jsonToHexRequire() {
-        String json = "{\"manifest_id\":\"97f4a1fdbecda6d59c96a43009fc5e5d7b8f639b1269c77cec718460dcc19cb3\",\"actions\":[{\"contract\":\"eosio.token\",\"action\":\"transfer\"}],\"chain_params_hash\":\"cbdd956f52acd910c3c958136d72f8560d1846bc7cf3157f5fbfb72d3001de45\",\"abi_hashes\":[\"43864d5af0fe294d44d19c612036cbe8c098414c4a12a5a7bb0bfe7db1556248\"]}";
-
-        String hexResult = "CBDD956F52ACD910C3C958136D72F8560D1846BC7CF3157F5FBFB72D3001DE4597F4A1FDBECDA6D59C96A43009FC5E5D7B8F639B1269C77CEC718460DCC19CB30100A6823403EA3055000000572D3CCDCD0143864D5AF0FE294D44D19C612036CBE8C098414C4A12A5A7BB0BFE7DB1556248";
-
-        String hex = null;
-
-        try {
-            hex = abieos.jsonToHex("eosio.assert", "", "require", json, "eosio.assert.abi.json", true);
-        } catch (EosioError eosioError) {
-            eosioError.printStackTrace();
-        }
-
-        assertNotNull(hex);
-        assertEquals(hex, hexResult);
-    }
-
-    @Test
-    public void hexToJsonRequire() {
-        String hex = "CBDD956F52ACD910C3C958136D72F8560D1846BC7CF3157F5FBFB72D3001DE4597F4A1FDBECDA6D59C96A43009FC5E5D7B8F639B1269C77CEC718460DCC19CB30100A6823403EA3055000000572D3CCDCD0143864D5AF0FE294D44D19C612036CBE8C098414C4A12A5A7BB0BFE7DB1556248";
-        String jsonResult = "{\"chain_params_hash\":\"CBDD956F52ACD910C3C958136D72F8560D1846BC7CF3157F5FBFB72D3001DE45\",\"manifest_id\":\"97F4A1FDBECDA6D59C96A43009FC5E5D7B8F639B1269C77CEC718460DCC19CB3\",\"actions\":[{\"contract\":\"eosio.token\",\"action\":\"transfer\"}],\"abi_hashes\":[\"43864D5AF0FE294D44D19C612036CBE8C098414C4A12A5A7BB0BFE7DB1556248\"]}";
-
-        String json = null;
-
-        try {
-            json = abieos.hexToJson("eosio.assert", "", "require", hex, "eosio.assert.abi.json");
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject("eosio.token", "transfer", null, abi);
+            serializationObject.hex = hex;
+            abieos.deserialize(serializationObject);
+            json = serializationObject.json;
         } catch (EosioError eosioError) {
             eosioError.printStackTrace();
         }
@@ -193,7 +137,7 @@ public class AbiEosInstrumentedTest {
         String hex = null;
 
         try {
-            hex = abieos.jsonToHex(null, "", "transaction", json, "transaction.abi.json", false);
+            hex = abieos.serializeTransaction(json);
         } catch (EosioError eosioError) {
             eosioError.printStackTrace();
         }

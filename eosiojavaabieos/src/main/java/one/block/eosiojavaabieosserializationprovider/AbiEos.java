@@ -129,6 +129,7 @@ public class AbiEos implements ISerializationProvider {
         String abi = getAbiJsonString("transaction.abi.json");
         AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null,
                 "", "transaction", abi);
+        serializationObject.json = json;
         serialize(serializationObject);
         return serializationObject.hex;
     }
@@ -138,6 +139,7 @@ public class AbiEos implements ISerializationProvider {
         String abi = getAbiJsonString("abi.abi.json");
         AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null,
                 "", "abi_def", abi);
+        serializationObject.json = json;
         serialize(serializationObject);
         return serializationObject.hex;
     }
@@ -155,7 +157,7 @@ public class AbiEos implements ISerializationProvider {
         long contract64 = stringToName64(deserilizationObject.contract);
 
         if (deserilizationObject.abi.isEmpty()) {
-            throw new EosioError(EosioErrorCode.vaultError, String.format("Json to hex -- No ABI provided for %s %s",
+            throw new EosioError(EosioErrorCode.vaultError, String.format("deserialize -- No ABI provided for %s %s",
                     deserilizationObject.contract == null ? deserilizationObject.contract : "",
                     deserilizationObject.name));
         }
@@ -194,16 +196,18 @@ public class AbiEos implements ISerializationProvider {
         String abi = getAbiJsonString("transaction.abi.json");
         AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null,
                 "", "transaction", abi);
+        serializationObject.hex = hex;
         deserialize(serializationObject);
         return serializationObject.json;
     }
 
     @NotNull
-    public String deserializeAbi(String json) throws EosioError {
+    public String deserializeAbi(String hex) throws EosioError {
         String abi = getAbiJsonString("abi.abi.json");
         AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null,
                 "", "abi_def", abi);
-        serialize(serializationObject);
+        serializationObject.hex = hex;
+        deserialize(serializationObject);
         return serializationObject.json;
     }
 
