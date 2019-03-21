@@ -87,9 +87,9 @@ public class AbiEosInstrumentedTest {
 
         try {
             AbiEosSerializationObject serializationObject = new AbiEosSerializationObject("eosio.token", "transfer", null, abi);
-            serializationObject.hex = hex;
+            serializationObject.setHex(hex);
             abieos.deserialize(serializationObject);
-            json = serializationObject.json;
+            json = serializationObject.getJson();
         } catch (EosioError eosioError) {
             eosioError.printStackTrace();
         }
