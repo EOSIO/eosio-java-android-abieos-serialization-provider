@@ -129,7 +129,7 @@ public class AbiEos implements ISerializationProvider {
         }
 
         boolean result = setAbi(context, contract64, serializationObject.getAbi());
-        if (result == false) {
+        if (!result) {
             String err = error();
             String errMsg = String.format("Json to hex == Unable to set ABI. %s", err == null ? "" : err);
             throw new EosioError(EosioErrorCode.serializationError, errMsg);
@@ -150,7 +150,7 @@ public class AbiEos implements ISerializationProvider {
                 serializationObject.getJson(),
                 true);
 
-        if (jsonToBinResult == false) {
+        if (!jsonToBinResult) {
             String err = error();
             String errMsg = String.format("Unable to pack json to bin. %s", err == null ? "" : err);
             throw new EosioError(EosioErrorCode.serializationError, errMsg);
@@ -230,7 +230,7 @@ public class AbiEos implements ISerializationProvider {
         }
 
         boolean result = setAbi(context, contract64, deserilizationObject.getAbi());
-        if (result == false) {
+        if (!result) {
             String err = error();
             String errMsg = String.format("deserialize == Unable to set ABI. %s", err == null ? "" : err);
             throw new EosioError(EosioErrorCode.deserializationError, errMsg);
