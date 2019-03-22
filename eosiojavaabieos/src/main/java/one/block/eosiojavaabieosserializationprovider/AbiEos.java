@@ -48,7 +48,7 @@ public class AbiEos implements ISerializationProvider {
     public AbiEos() throws SerializationProviderError {
         context = create();
         if (null == context) {
-            throw new SerializationProviderError(CANNOT_CREATE_CONTEXT_ERR_MSG);
+            throw new AbieosContextNullError(CANNOT_CREATE_CONTEXT_ERR_MSG);
         }
     }
 
@@ -73,7 +73,7 @@ public class AbiEos implements ISerializationProvider {
      * @throws SerializationProviderError
      */
     public long stringToName64(@Nullable String str) throws SerializationProviderError {
-        if (null == context) throw new SerializationProviderError(NULL_CONTEXT_ERR_MSG);
+        if (null == context) throw new AbieosContextNullError(NULL_CONTEXT_ERR_MSG);
         return stringToName(context, str);
     }
 
@@ -85,7 +85,7 @@ public class AbiEos implements ISerializationProvider {
      */
     @NotNull
     public String name64ToString(long name) throws SerializationProviderError {
-        if (null == context) throw new SerializationProviderError(NULL_CONTEXT_ERR_MSG);
+        if (null == context) throw new AbieosContextNullError(NULL_CONTEXT_ERR_MSG);
         return nameToString(context, name);
     }
 
@@ -97,7 +97,7 @@ public class AbiEos implements ISerializationProvider {
      */
     @Nullable
     public String error() throws SerializationProviderError {
-        if (null == context) throw new SerializationProviderError(NULL_CONTEXT_ERR_MSG);
+        if (null == context) throw new AbieosContextNullError(NULL_CONTEXT_ERR_MSG);
         return getError(context);
     }
 
@@ -335,7 +335,7 @@ public class AbiEos implements ISerializationProvider {
         destroyContext();
         context = create();
         if (null == context) {
-            throw new SerializationProviderError("Could not create abieos context.");
+            throw new AbieosContextNullError("Could not create abieos context.");
         }
     }
 
