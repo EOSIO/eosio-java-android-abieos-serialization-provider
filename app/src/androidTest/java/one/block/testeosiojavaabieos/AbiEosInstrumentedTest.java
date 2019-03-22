@@ -1,14 +1,15 @@
 package one.block.testeosiojavaabieos;
 
 import androidx.test.runner.AndroidJUnit4;
-import one.block.eosiojava.EosioError;
+import one.block.eosiojava.error.serializationprovider.DeserializeAbiError;
+import one.block.eosiojava.error.serializationprovider.DeserializeError;
+import one.block.eosiojava.error.serializationprovider.DeserializeTransactionError;
+import one.block.eosiojava.error.serializationprovider.SerializationProviderError;
+import one.block.eosiojava.error.serializationprovider.SerializeTransactionError;
 import one.block.eosiojava.models.AbiEosSerializationObject;
 import one.block.eosiojavaabieosserializationprovider.AbiEos;
-import one.block.eosiojavaabieosserializationprovider.AbiEosContextError;
 
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,8 +30,8 @@ public class AbiEosInstrumentedTest {
     public static void startSetup() {
         try {
             abieos = new AbiEos();
-        } catch (EosioError eosioError) {
-            eosioError.printStackTrace();
+        } catch (SerializationProviderError serializationProviderError) {
+            serializationProviderError.printStackTrace();
             fail();
         }
     }
@@ -50,8 +51,8 @@ public class AbiEosInstrumentedTest {
 
         try {
             json = abieos.deserializeAbi(hex);
-        } catch (EosioError eosioError) {
-            eosioError.printStackTrace();
+        } catch (DeserializeAbiError err) {
+            err.printStackTrace();
         }
 
         assertNotNull(json);
@@ -68,8 +69,8 @@ public class AbiEosInstrumentedTest {
 
         try {
             json = abieos.deserializeTransaction(hex);
-        } catch (EosioError eosioError) {
-            eosioError.printStackTrace();
+        } catch (DeserializeTransactionError err) {
+            err.printStackTrace();
         }
 
         assertNotNull(json);
@@ -90,8 +91,8 @@ public class AbiEosInstrumentedTest {
             serializationObject.setHex(hex);
             abieos.deserialize(serializationObject);
             json = serializationObject.getJson();
-        } catch (EosioError eosioError) {
-            eosioError.printStackTrace();
+        } catch (DeserializeError err) {
+            err.printStackTrace();
         }
 
         assertNotNull(json);
@@ -138,8 +139,8 @@ public class AbiEosInstrumentedTest {
 
         try {
             hex = abieos.serializeTransaction(json);
-        } catch (EosioError eosioError) {
-            eosioError.printStackTrace();
+        } catch (SerializeTransactionError err) {
+            err.printStackTrace();
         }
 
         assertNotNull(hex);
@@ -147,12 +148,12 @@ public class AbiEosInstrumentedTest {
     }
 
     @Test
-    public void textContextError() {
+    public void testContextError() {
         try {
             abieos.destroyContext();
             String err = abieos.error();
             fail("Should have thrown an error because the context was null.");
-        } catch (AbiEosContextError ace) {
+        } catch (SerializationProviderError ace) {
 
         }
     }

@@ -8,8 +8,7 @@ import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.util.Map;
-import one.block.eosiojava.EosioError;
-import one.block.eosiojava.EosioErrorCode;
+import one.block.eosiojava.error.serializationprovider.*;
 
 /**
  * Implementation of ISerializationProvider based on a native C++ transformation process
@@ -42,14 +41,12 @@ public class AbiEos implements ISerializationProvider {
      * Create a new AbiEos serialization provider instance, initilizing a new context for the C++
      * library to work on automatically.
      *
-     * @throws EosioError - An error is thrown if the context cannot be created.
+     * @throws SerializationProviderError - An error is thrown if the context cannot be created.
      */
-    public AbiEos() throws EosioError {
+    public AbiEos() throws SerializationProviderError {
         context = create();
         if (null == context) {
-            EosioError eosioError = new EosioError(EosioErrorCode.serializationError, "Serialization provider context error.");
-            eosioError.originalError = new AbiEosContextError("Could not create abieos context.");
-            throw eosioError;
+            throw new SerializationProviderError("Could not create abieos context.");
         }
     }
 
@@ -71,9 +68,10 @@ public class AbiEos implements ISerializationProvider {
      * is used instead.
      * @param str - String to convert to 64 bit value.
      * @return - 64 bit value.  Returned as long but should be treated as an unsigned value.
+     * @throws SerializationProviderError
      */
-    public long stringToName64(@Nullable String str) {
-        if (null == context) throw new AbiEosContextError("Null context!  Has destroyContext() already been called?");
+    public long stringToName64(@Nullable String str) throws SerializationProviderError {
+        if (null == context) throw new SerializationProviderError("Null context!  Has destroyContext() already been called?");
         return stringToName(context, str);
     }
 
@@ -81,10 +79,11 @@ public class AbiEos implements ISerializationProvider {
      * Take the given 64 bit value and converts it to a String.
      * @param name - 64 bit value to convert.  This value should always be treated as unsigned.
      * @return - String equivalent to the 64 bit input value.
+     * @throws SerializationProviderError
      */
     @NotNull
-    public String name64ToString(long name) {
-        if (null == context) throw new AbiEosContextError("Null context!  Has destroyContext() already been called?");
+    public String name64ToString(long name) throws SerializationProviderError {
+        if (null == context) throw new SerializationProviderError("Null context!  Has destroyContext() already been called?");
         return nameToString(context, name);
     }
 
@@ -92,10 +91,11 @@ public class AbiEos implements ISerializationProvider {
      * Returns the underlying context error from the C++ conversion code, if one exists.
      *
      * @return - Current error string from the C++ context, if any.
+     * @throws SerializationProviderError
      */
     @Nullable
-    public String error() {
-        if (null == context) throw new AbiEosContextError("Null context!  Has destroyContext() already been called?");
+    public String error() throws SerializationProviderError {
+        if (null == context) throw new SerializationProviderError("Null context!  Has destroyContext() already been called?");
         return getError(context);
     }
 
@@ -106,62 +106,71 @@ public class AbiEos implements ISerializationProvider {
      *
      * @param serializationObject - Input object passing the JSON string to be converted as well
      * as other parameters to control the serialization process.
-     * @throws EosioError - A serialization error is thrown if there are any exceptions during the
+     * @throws SerializeError - A serialization error is thrown if there are any exceptions during the
      * conversion process.
      */
     public void serialize(@NotNull AbiEosSerializationObject serializationObject)
-            throws EosioError {
+            throws SerializeError {
 
-        // refreshContext() will throw an error if it can't create the context so we don't need
-        // to check it explicitly before this.
-        refreshContext();
+        try {
+            // refreshContext() will throw an error if it can't create the context so we don't need
+            // to check it explicitly before this.
+            refreshContext();
 
-        if (serializationObject.getJson().isEmpty()) {
-            throw new EosioError(EosioErrorCode.serializationError, "No content to serialize.");
+            if (serializationObject.getJson().isEmpty()) {
+                throw new SerializeError("No content to serialize.");
+            }
+
+            long contract64 = stringToName64(serializationObject.getContract());
+
+            if (serializationObject.getAbi().isEmpty()) {
+                throw new SerializeError(String.format("serialize -- No ABI provided for %s %s",
+                        serializationObject.getContract() == null ? serializationObject
+                                .getContract() : "",
+                        serializationObject.getName()));
+            }
+
+            boolean result = setAbi(context, contract64, serializationObject.getAbi());
+            if (!result) {
+                String err = error();
+                String errMsg = String
+                        .format("Json to hex == Unable to set ABI. %s", err == null ? "" : err);
+                throw new SerializeError(errMsg);
+            }
+
+            String typeStr = serializationObject.getType() == null ?
+                    getType(serializationObject.getName(), contract64)
+                    : serializationObject.getType();
+            if (typeStr == null) {
+                String err = error();
+                String errMsg = String.format("Unable to find type for action %s. %s",
+                        serializationObject.getName(), err == null ? "" : err);
+                throw new SerializeError(errMsg);
+            }
+
+            boolean jsonToBinResult = jsonToBin(context,
+                    contract64,
+                    typeStr,
+                    serializationObject.getJson(),
+                    true);
+
+            if (!jsonToBinResult) {
+                String err = error();
+                String errMsg = String
+                        .format("Unable to pack json to bin. %s", err == null ? "" : err);
+                throw new SerializeError(errMsg);
+            }
+
+            String hex = getBinHex(context);
+            if (hex == null) {
+                throw new SerializeError("Unable to convert binary to hex.");
+            }
+
+            serializationObject.setHex(hex);
+
+        } catch (SerializationProviderError serializationProviderError) {
+            throw new SerializeError(serializationProviderError);
         }
-
-        long contract64 = stringToName64(serializationObject.getContract());
-
-        if (serializationObject.getAbi().isEmpty()) {
-            throw new EosioError(EosioErrorCode.vaultError, String.format("serialize -- No ABI provided for %s %s",
-                    serializationObject.getContract() == null ? serializationObject.getContract() : "",
-                    serializationObject.getName()));
-        }
-
-        boolean result = setAbi(context, contract64, serializationObject.getAbi());
-        if (!result) {
-            String err = error();
-            String errMsg = String.format("Json to hex == Unable to set ABI. %s", err == null ? "" : err);
-            throw new EosioError(EosioErrorCode.serializationError, errMsg);
-        }
-
-        String typeStr = serializationObject.getType() == null ?
-                getType(serializationObject.getName(), contract64) : serializationObject.getType();
-        if (typeStr == null) {
-            String err = error();
-            String errMsg = String.format("Unable to find type for action %s. %s",
-                    serializationObject.getName(), err == null ? "" : err);
-            throw new EosioError(EosioErrorCode.serializationError, errMsg);
-        }
-
-        boolean jsonToBinResult = jsonToBin(context,
-                contract64,
-                typeStr,
-                serializationObject.getJson(),
-                true);
-
-        if (!jsonToBinResult) {
-            String err = error();
-            String errMsg = String.format("Unable to pack json to bin. %s", err == null ? "" : err);
-            throw new EosioError(EosioErrorCode.serializationError, errMsg);
-        }
-
-        String hex = getBinHex(context);
-        if (hex == null) {
-            throw new EosioError(EosioErrorCode.serializationError, "Unable to convert binary to hex.");
-        }
-
-        serializationObject.setHex(hex);
 
     }
 
@@ -170,17 +179,21 @@ public class AbiEos implements ISerializationProvider {
      *
      * @param json - JSON string representing the transaction to serialize.
      * @return - Serialized hex string representing the transaction JSON.
-     * @throws EosioError - A serialization error is thrown if there are any exceptions during the
+     * @throws SerializeTransactionError - A serialization error is thrown if there are any exceptions during the
      *      * conversion process.
      */
     @NotNull
-    public String serializeTransaction(String json) throws EosioError {
-        String abi = getAbiJsonString("transaction.abi.json");
-        AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null,
-                "", "transaction", abi);
-        serializationObject.setJson(json);
-        serialize(serializationObject);
-        return serializationObject.getHex();
+    public String serializeTransaction(String json) throws SerializeTransactionError {
+        try {
+            String abi = getAbiJsonString("transaction.abi.json");
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null,
+                    "", "transaction", abi);
+            serializationObject.setJson(json);
+            serialize(serializationObject);
+            return serializationObject.getHex();
+        } catch (SerializationProviderError serializationProviderError) {
+            throw new SerializeTransactionError(serializationProviderError);
+        }
     }
 
     /**
@@ -188,17 +201,21 @@ public class AbiEos implements ISerializationProvider {
      *
      * @param json - JSON string representing the ABI to serialize.
      * @return - Serialized hex string representing the ABI JSON.
-     * @throws EosioError - A serialization error is thrown if there are any exceptions during the
+     * @throws SerializeAbiError - A serialization error is thrown if there are any exceptions during the
      * conversion process.
      */
     @NotNull
-    public String serializeAbi(String json) throws EosioError {
-        String abi = getAbiJsonString("abi.abi.json");
-        AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null,
-                "", "abi_def", abi);
-        serializationObject.setJson(json);
-        serialize(serializationObject);
-        return serializationObject.getHex();
+    public String serializeAbi(String json) throws SerializeAbiError {
+        try {
+            String abi = getAbiJsonString("abi.abi.json");
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null,
+                    "", "abi_def", abi);
+            serializationObject.setJson(json);
+            serialize(serializationObject);
+            return serializationObject.getHex();
+        } catch (SerializationProviderError serializationProviderError) {
+            throw new SerializeAbiError(serializationProviderError);
+        }
     }
 
     /**
@@ -208,52 +225,59 @@ public class AbiEos implements ISerializationProvider {
      *
      * @param deserilizationObject - Input object passing the hex string to be converted as well
      * as other parameters to control the deserialization process.
-     * @throws EosioError - A deserialization error is thrown if there are any exceptions during the
+     * @throws DeserializeError - A deserialization error is thrown if there are any exceptions during the
      * conversion process.
      */
-    public void deserialize(@NotNull AbiEosSerializationObject deserilizationObject) throws EosioError {
+    public void deserialize(@NotNull AbiEosSerializationObject deserilizationObject) throws DeserializeError {
 
-        // refreshContext() will throw an error if it can't create the context so we don't need
-        // to check it explicitly before this.
-        refreshContext();
+        try {
+            // refreshContext() will throw an error if it can't create the context so we don't need
+            // to check it explicitly before this.
+            refreshContext();
 
-        if (deserilizationObject.getHex().isEmpty()) {
-            throw new EosioError(EosioErrorCode.deserializationError, "No content to serialize.");
+            if (deserilizationObject.getHex().isEmpty()) {
+                throw new DeserializeError("No content to serialize.");
+            }
+
+            long contract64 = stringToName64(deserilizationObject.getContract());
+
+            if (deserilizationObject.getAbi().isEmpty()) {
+                throw new DeserializeError(String.format("deserialize -- No ABI provided for %s %s",
+                        deserilizationObject.getContract() == null ? deserilizationObject
+                                .getContract() : "",
+                        deserilizationObject.getName()));
+            }
+
+            boolean result = setAbi(context, contract64, deserilizationObject.getAbi());
+            if (!result) {
+                String err = error();
+                String errMsg = String
+                        .format("deserialize == Unable to set ABI. %s", err == null ? "" : err);
+                throw new DeserializeError(errMsg);
+            }
+
+            String typeStr = deserilizationObject.getType() == null ?
+                    getType(deserilizationObject.getName(), contract64)
+                    : deserilizationObject.getType();
+            if (typeStr == null) {
+                String err = error();
+                String errMsg = String.format("Unable to find type for action %s. %s",
+                        deserilizationObject.getName(), err == null ? "" : err);
+                throw new DeserializeError(errMsg);
+            }
+
+            String jsonStr = hexToJson(context, contract64, typeStr, deserilizationObject.getHex());
+            if (jsonStr == null) {
+                String err = error();
+                String errMsg = String
+                        .format("Unable to unpack hex to json. %s", err == null ? "" : err);
+                throw new DeserializeError(errMsg);
+            }
+
+            deserilizationObject.setJson(jsonStr);
+        } catch (SerializationProviderError serializationProviderError) {
+            throw new DeserializeError(serializationProviderError);
         }
-
-        long contract64 = stringToName64(deserilizationObject.getContract());
-
-        if (deserilizationObject.getAbi().isEmpty()) {
-            throw new EosioError(EosioErrorCode.vaultError, String.format("deserialize -- No ABI provided for %s %s",
-                    deserilizationObject.getContract() == null ? deserilizationObject.getContract() : "",
-                    deserilizationObject.getName()));
-        }
-
-        boolean result = setAbi(context, contract64, deserilizationObject.getAbi());
-        if (!result) {
-            String err = error();
-            String errMsg = String.format("deserialize == Unable to set ABI. %s", err == null ? "" : err);
-            throw new EosioError(EosioErrorCode.deserializationError, errMsg);
-        }
-
-        String typeStr = deserilizationObject.getType() == null ?
-                getType(deserilizationObject.getName(), contract64) : deserilizationObject.getType();
-        if (typeStr == null) {
-            String err = error();
-            String errMsg = String.format("Unable to find type for action %s. %s",
-                    deserilizationObject.getName(), err == null ? "" : err);
-            throw new EosioError(EosioErrorCode.deserializationError, errMsg);
-        }
-
-        String jsonStr = hexToJson(context, contract64, typeStr, deserilizationObject.getHex());
-        if (jsonStr == null) {
-            String err = error();
-            String errMsg = String.format("Unable to unpack hex to json. %s", err == null ? "" : err);
-            throw new EosioError(EosioErrorCode.deserializationError, errMsg);
-        }
-
-        deserilizationObject.setJson(jsonStr);
-
     }
 
     /**
@@ -261,17 +285,21 @@ public class AbiEos implements ISerializationProvider {
      *
      * @param hex - Hex string representing the transaction to deserialize.
      * @return - Deserialized JSON string representing the transaction hex.
-     * @throws EosioError - A deserialization error is thrown if there are any exceptions during the
+     * @throws DeserializeTransactionError - A deserialization error is thrown if there are any exceptions during the
      *      * conversion process.
      */
     @NotNull
-    public String deserializeTransaction(String hex) throws EosioError {
-        String abi = getAbiJsonString("transaction.abi.json");
-        AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null,
-                "", "transaction", abi);
-        serializationObject.setHex(hex);
-        deserialize(serializationObject);
-        return serializationObject.getJson();
+    public String deserializeTransaction(String hex) throws DeserializeTransactionError {
+        try {
+            String abi = getAbiJsonString("transaction.abi.json");
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null,
+                    "", "transaction", abi);
+            serializationObject.setHex(hex);
+            deserialize(serializationObject);
+            return serializationObject.getJson();
+        } catch (SerializationProviderError serializationProviderError) {
+            throw new DeserializeTransactionError(serializationProviderError);
+        }
     }
 
     /**
@@ -279,31 +307,33 @@ public class AbiEos implements ISerializationProvider {
      *
      * @param hex - Hex string representing the ABI to deserialize.
      * @return - Deserialized JSON string representing the ABI hex.
-     * @throws EosioError - A deserialization error is thrown if there are any exceptions during the
+     * @throws DeserializeAbiError - A deserialization error is thrown if there are any exceptions during the
      * conversion process.
      */
     @NotNull
-    public String deserializeAbi(String hex) throws EosioError {
-        String abi = getAbiJsonString("abi.abi.json");
-        AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null,
-                "", "abi_def", abi);
-        serializationObject.setHex(hex);
-        deserialize(serializationObject);
-        return serializationObject.getJson();
+    public String deserializeAbi(String hex) throws DeserializeAbiError {
+        try {
+            String abi = getAbiJsonString("abi.abi.json");
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null,
+                    "", "abi_def", abi);
+            serializationObject.setHex(hex);
+            deserialize(serializationObject);
+            return serializationObject.getJson();
+        } catch (SerializationProviderError serializationProviderError) {
+            throw new DeserializeAbiError(serializationProviderError);
+        }
     }
 
     /**
      * Reset the underlying C++ context by destroying and recreating it.  This allows multiple
      * conversions to be done using the same AbiEos instance.
-     * @throws EosioError - if the context cannot be re-created.
+     * @throws SerializationProviderError - if the context cannot be re-created.
      */
-    private void refreshContext() throws EosioError {
+    private void refreshContext() throws SerializationProviderError {
         destroyContext();
         context = create();
         if (null == context) {
-            EosioError eosioError = new EosioError(EosioErrorCode.serializationError, "Serialization provider context error.");
-            eosioError.originalError = new AbiEosContextError("Could not create abieos context.");
-            throw eosioError;
+            throw new SerializationProviderError("Could not create abieos context.");
         }
     }
 
@@ -312,10 +342,10 @@ public class AbiEos implements ISerializationProvider {
      *
      * @param abi - Name of the ABI JSON template to return.
      * @return - JSON template string for the specified ABI.
-     * @throws EosioError - if the specified ABI JSON template cannot be found and returned.
+     * @throws SerializationProviderError - if the specified ABI JSON template cannot be found and returned.
      */
     @NotNull
-    private String getAbiJsonString(@NotNull String abi)  throws EosioError {
+    private String getAbiJsonString(@NotNull String abi)  throws SerializationProviderError {
 
         String abiString;
 
@@ -328,7 +358,7 @@ public class AbiEos implements ISerializationProvider {
         }
 
         if (abiString == null || abiString.isEmpty()) {
-            throw new EosioError(EosioErrorCode.serializationError, String.format("Serialization Provider -- No ABI found for %s",
+            throw new SerializationProviderError(String.format("Serialization Provider -- No ABI found for %s",
                     abi));
         }
 
@@ -344,9 +374,10 @@ public class AbiEos implements ISerializationProvider {
      * @param contract - 64 bit value of the contract name desired for type.  i.e. originating name
      * might be "eosio.token"
      * @return - String specifying the type for the given action and contract.
+     * @throws SerializationProviderError
      */
     @Nullable
-    private String getType(@NotNull String action, long contract) {
+    private String getType(@NotNull String action, long contract) throws SerializationProviderError {
         long action64 = stringToName64(action);
         return getTypeForAction(context, contract, action64);
     }
