@@ -4,11 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import one.block.eosiojava.error.serializationprovider.SerializationProviderError;
 import one.block.eosiojavaabieosserializationprovider.AbiEos;
-import one.block.eosiojava.EosioError;
-import one.block.eosiojava.models.AbiEosSerializationObject;
-import one.block.eosiojavaabieosserializationprovider.AbiEos;
-import one.block.eosiojavaabieosserializationprovider.AbiEosContextError;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
             results = String
                     .format("Original: %s\nname64: %d\ntest: %s", contractStrOrig, name64, testStr);
             tv.setText(results);
-        } catch (one.block.eosiojava.EosioError eosioError) {
-            results = "Error from AbiEos: " + eosioError.description();
+        } catch (SerializationProviderError serializationProviderError) {
+            results = "Error from SerializationProvider: " + serializationProviderError.getLocalizedMessage();
         }
         tv.setText(results);
     }
