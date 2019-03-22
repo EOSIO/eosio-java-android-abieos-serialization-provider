@@ -36,6 +36,8 @@ public class AbiEos implements ISerializationProvider {
     private ByteBuffer context;
 
     private String TAG = "AbiEos";
+    private static final String NULL_CONTEXT_ERR_MSG = "Null context!  Has destroyContext() already been called?";
+    private static final String CANNOT_CREATE_CONTEXT_ERR_MSG = "Could not create abieos context.";
 
     /**
      * Create a new AbiEos serialization provider instance, initilizing a new context for the C++
@@ -46,7 +48,7 @@ public class AbiEos implements ISerializationProvider {
     public AbiEos() throws SerializationProviderError {
         context = create();
         if (null == context) {
-            throw new SerializationProviderError("Could not create abieos context.");
+            throw new SerializationProviderError(CANNOT_CREATE_CONTEXT_ERR_MSG);
         }
     }
 
@@ -71,7 +73,7 @@ public class AbiEos implements ISerializationProvider {
      * @throws SerializationProviderError
      */
     public long stringToName64(@Nullable String str) throws SerializationProviderError {
-        if (null == context) throw new SerializationProviderError("Null context!  Has destroyContext() already been called?");
+        if (null == context) throw new SerializationProviderError(NULL_CONTEXT_ERR_MSG);
         return stringToName(context, str);
     }
 
@@ -83,7 +85,7 @@ public class AbiEos implements ISerializationProvider {
      */
     @NotNull
     public String name64ToString(long name) throws SerializationProviderError {
-        if (null == context) throw new SerializationProviderError("Null context!  Has destroyContext() already been called?");
+        if (null == context) throw new SerializationProviderError(NULL_CONTEXT_ERR_MSG);
         return nameToString(context, name);
     }
 
@@ -95,7 +97,7 @@ public class AbiEos implements ISerializationProvider {
      */
     @Nullable
     public String error() throws SerializationProviderError {
-        if (null == context) throw new SerializationProviderError("Null context!  Has destroyContext() already been called?");
+        if (null == context) throw new SerializationProviderError(NULL_CONTEXT_ERR_MSG);
         return getError(context);
     }
 
