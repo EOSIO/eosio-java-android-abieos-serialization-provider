@@ -35,6 +35,13 @@ android {
         unitTests.includeAndroidResources = true
     }
 
+    // Needed to get bitcoin-j to produce a valid apk for android.
+    packagingOptions {
+        exclude 'lib/x86_64/darwin/libscrypt.dylib'
+        exclude 'lib/x86_64/freebsd/libscrypt.so'
+        exclude 'lib/x86_64/linux/libscrypt.so'
+    }
+
 }
 
 dependencies {
