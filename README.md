@@ -59,7 +59,7 @@ try {
 }
 
 try {
-    let binaryToJsonTransaction = abieos.deserializeTransaction(hex)
+    String binaryToJsonTransaction = abieos.deserializeTransaction(hex)
 } catch (DeserializeTransactionError err) {
     err.printStackTrace();
 }
