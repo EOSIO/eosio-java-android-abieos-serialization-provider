@@ -8,7 +8,7 @@ Interested in contributing? That's awesome! Here are some guidelines to get star
   - [Change Requests](#change-requests)
 - [Working on ABIEOS Serialization Provider](#working-on-abieos-serialization-provider)
   - [Feature Branches](#feature-branches)
-  - [Developing With Local Pods](#developing-with-local-pods)
+  - [Developing With Gradle Locally](#developing-with-gradle-locally)
   - [Submitting Pull Requests](#submitting-pull-requests)
   - [Testing and Quality Assurance](#testing-and-quality-assurance)
   - [Code Style and Linting](#code-style-and-linting)
