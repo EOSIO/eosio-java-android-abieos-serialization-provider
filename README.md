@@ -1,12 +1,86 @@
-# EOSIO SDK for Java ABIEOS Serialization Provider ![EOSIO Alpha](https://img.shields.io/badge/EOSIO-Alpha-blue.svg)
+# EOSIO SDK for Java Android: ABIEOS Serialization Provider ![EOSIO Alpha](https://img.shields.io/badge/EOSIO-Alpha-blue.svg)
+[![Software License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/EOSIO/eosio-java-android-abieos-serialization-provider/blob/master/LICENSE)
+![Lagnuage Java](https://img.shields.io/badge/Language-C%2B%2B%2FJava-yellow.svg)
+![](https://img.shields.io/badge/Deployment%20Target-Android%206%2B-blue.svg)
 
-## Overview
+## Contents
 
-## Contributing
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Direct Usage](#direct-usage)
+- [Want to Help?](#want-to-help)
+- [License & Legal](#license)
 
-[Contributing Guide](./CONTRIBUTING.md)
+## Prerequisites
 
-[Code of Conduct](./CONTRIBUTING.md#conduct)
+* Android Studio 3.3.2 or higher
+* NDK 18+ (C++ 17 standard support required)
+* Cmake 3.6.0+
+* Gradle 4.10.1+
+* Gradle Plugin 3.3.0+
+* For Android, Android 6 (Marshmallow)+
+
+This project relies on platform functionality and libraries only present in Android 6+ and the Android NDK. Therefore, any project depending on ABIEOS Serialization Provider with [EOSIO SDK for Java](https://github.com/EOSIO/eosio-java) **must be an Android 6+ project**. Other serialization providers, however, can be created to support earlier Android versions or other platforms. If your project requires earlier Android version or alternate platform support, or if you'd like to create a serialization provider and have questions, please reach out to us by [logging an issue](/../../issues/new).
+
+## Installation
+
+ABIEOS Serialization Provider is intended to be used in conjunction with [EOSIO SDK for Java](https://github.com/EOSIO/eosio-java) as a provider plugin.
+
+To use ABIEOS Serialization Provider with EOSIO SDK for Java in your app, add the following modules to your build.gradle:
+
+**TODO** This needs to be updated when the distribution strategy is finalized.
+
+```groovy
+implementation 'one.block:eosio-java:0.1-alpha'
+implementation 'one.block:eosio-java-android-serialization-provider:0.1-alpha'
+implementation 'one.block:eosio-java-softkey-signature-provider:0.1-alpha'
+```
+
+You must also add the following to the `android` section of your application's build.gradle:
+
+```groovy
+// Needed to get bitcoin-j to produce a valid apk for android.
+packagingOptions {
+    exclude 'lib/x86_64/darwin/libscrypt.dylib'
+    exclude 'lib/x86_64/freebsd/libscrypt.so'
+    exclude 'lib/x86_64/linux/libscrypt.so'
+}
+```
+
+Then refresh your gradle project.
+
+Now ABIEOS Serialization Provider is ready for use within EOSIO SDK for Java according to the [EOSIO SDK for Java Basic Usage instructions](https://github.com/EOSIO/eosio-java/tree/develop#basic-usage).
+
+## Direct Usage
+
+If you wish to use ABIEOS Serialization Provider directly, its public methods can be called like this:
+
+```java
+try {
+    AbiEos abieos = new AbiEos()
+} catch (SerializationProviderError serializationProviderError) {
+    serializationProviderError.printStackTrace();
+}
+
+String hex = "1686755CA99DE8E73E1200" // some binary data
+String json = "{"name": "John"}" // some JSON
+
+try {
+    String jsonToBinaryTransaction = abieos.serializeTransaction(json)
+} catch (SerializeTransactionError err) {
+    err.printStackTrace();
+}
+
+try {
+    String binaryToJsonTransaction = abieos.deserializeTransaction(hex)
+} catch (DeserializeTransactionError err) {
+    err.printStackTrace();
+}
+```
+
+## Want to help?
+
+Interested in contributing? That's awesome! Here are some [Contribution Guidelines](./CONTRIBUTING.md) and the [Code of Conduct](./CONTRIBUTING.md#conduct).
 
 ## License
 
