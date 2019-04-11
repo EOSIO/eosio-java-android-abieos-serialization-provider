@@ -36,6 +36,17 @@ implementation 'one.block:eosio-java-android-serialization-provider:0.1-alpha'
 implementation 'one.block:eosio-java-softkey-signature-provider:0.1-alpha'
 ```
 
+You must also add the following to the android section of your application's build.gradle:
+
+```groovy
+// Needed to get bitcoin-j to produce a valid apk for android.
+packagingOptions {
+    exclude 'lib/x86_64/darwin/libscrypt.dylib'
+    exclude 'lib/x86_64/freebsd/libscrypt.so'
+    exclude 'lib/x86_64/linux/libscrypt.so'
+}
+```
+
 Then refresh your gradle project.
 
 Now ABIEOS Serialization Provider is ready for use within EOSIO SDK for Java according to the [EOSIO SDK for Java Basic Usage instructions](https://github.com/EOSIO/eosio-java/tree/develop#basic-usage).
