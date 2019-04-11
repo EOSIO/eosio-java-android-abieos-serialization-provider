@@ -10,7 +10,7 @@
 - [Direct Usage](#direct-usage)
 - [Want to Help?](#want-to-help)
 - [License & Legal](#license)
-- 
+
 ## Prerequisites
 
 * Android Studio 3.3.2 or higher
@@ -18,7 +18,7 @@
 * Cmake 3.6.0+
 * Gradle 4.10.1+
 * Gradle Plugin 3.3.0+
-* For Android, Android 6(Marshmallow)+
+* For Android, Android 6 (Marshmallow)+
 
 This project relies on platform functionality and libraries only present in Android 6+ and the Android NDK. Therefore, any project depending on ABIEOS Serialization Provider with [EOSIO SDK for Java](https://github.com/EOSIO/eosio-java) **must be an Android 6+ project**. Other serialization providers, however, can be created to support earlier Android versions or other platforms. If your project requires earlier Android version or alternate platform support, or if you'd like to create a serialization provider and have questions, please reach out to us by [logging an issue](/../../issues/new).
 
@@ -51,13 +51,15 @@ Then refresh your gradle project.
 
 Now ABIEOS Serialization Provider is ready for use within EOSIO SDK for Java according to the [EOSIO SDK for Java Basic Usage instructions](https://github.com/EOSIO/eosio-java/tree/develop#basic-usage).
 
+## Direct Usage
+
 If you wish to use ABIEOS Serialization Provider directly, its public methods can be called like this:
 
 ```java
 try {
-	AbiEos abieos = new AbiEos()
+    AbiEos abieos = new AbiEos()
 } catch (SerializationProviderError serializationProviderError) {
-   serializationProviderError.printStackTrace();
+    serializationProviderError.printStackTrace();
 }
 
 String hex = "1686755CA99DE8E73E1200" // some binary data

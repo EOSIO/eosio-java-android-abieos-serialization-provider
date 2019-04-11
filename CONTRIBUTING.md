@@ -88,11 +88,11 @@ Pull requests are awesome. If you're looking to raise a PR for something which d
 
 Never underestimate just how useful quality assurance is. If you're looking to get involved with the code base and don't know where to start, checking out and testing a pull request is one of the most useful things you could do.
 
-Essentially, [check out the latest develop branch](#working-on-ABIEOS Serialization Provider), take it for a spin, and if you find anything odd, please follow the [bug report guidelines](#bug-reports) and let us know!
+Essentially, [check out the latest develop branch](#working-on-abieos-serialization-provider), take it for a spin, and if you find anything odd, please follow the [bug report guidelines](#bug-reports) and let us know!
 
 ### Code Style and Linting
 
-ABIEOS Serialization Provider leverages [sonarlint](https://www.sonarlint.org/) for linting and the [Google Java Style Guide](https://github.com/google/styleguide) with tab size and indent set to 4, and continuation indent set to 8 for code format flagging. Once sonarlint is installed, linting warnings and errors will be flagged inline with squiggles.  Automatic code formatting can be accomplished by downloading and importing the Google Java Style settings into your IDE.  
+ABIEOS Serialization Provider leverages [SonarLint](https://www.sonarlint.org/) for linting and the [Google Java Style Guide](https://github.com/google/styleguide) with tab size and indent set to 4, and continuation indent set to 8 for code format flagging. Once SonarLint is installed, linting warnings and errors will be flagged inline with squiggles.  Automatic code formatting can be accomplished by downloading and importing the Google Java Style settings into your IDE.  
 
 Please be sure to resolve any linting issues introduced by your contributions prior to requesting a review on your PR. 
 
