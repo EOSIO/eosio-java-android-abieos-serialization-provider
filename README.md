@@ -36,7 +36,7 @@ implementation 'one.block:eosio-java-android-serialization-provider:0.1-alpha'
 implementation 'one.block:eosio-java-softkey-signature-provider:0.1-alpha'
 ```
 
-You must also add the following to the android section of your application's build.gradle:
+You must also add the following to the `android` section of your application's build.gradle:
 
 ```groovy
 // Needed to get bitcoin-j to produce a valid apk for android.
