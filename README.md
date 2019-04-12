@@ -57,7 +57,7 @@ If you wish to use ABIEOS Serialization Provider directly, its public methods ca
 
 ```java
 try {
-    AbiEos abieos = new AbiEos()
+    AbiEos abieos = new AbiEosSerializationProviderImpl()
 } catch (SerializationProviderError serializationProviderError) {
     serializationProviderError.printStackTrace();
 }
