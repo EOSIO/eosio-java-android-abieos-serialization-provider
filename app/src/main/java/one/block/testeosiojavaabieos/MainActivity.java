@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import one.block.eosiojava.error.serializationprovider.SerializationProviderError;
-import one.block.eosiojavaabieosserializationprovider.AbiEos;
+import one.block.eosiojavaabieosserializationprovider.AbiEosSerializationProviderImpl;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,12 +16,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Example of a call to a native method
         TextView tv = findViewById(R.id.sample_text);
-        String results = "Waiting for AbiEos";
+        String results = "Waiting for AbiEosSerializationProviderImpl";
         try {
-            AbiEos abiEos = new AbiEos();
+            AbiEosSerializationProviderImpl abiEosSerializationProviderImpl = new AbiEosSerializationProviderImpl();
             String contractStrOrig = "eosio.assert";
-            long name64 = abiEos.stringToName64(contractStrOrig);
-            String testStr = abiEos.name64ToString(name64);
+            long name64 = abiEosSerializationProviderImpl.stringToName64(contractStrOrig);
+            String testStr = abiEosSerializationProviderImpl.name64ToString(name64);
 
             results = String
                     .format("Original: %s\nname64: %d\ntest: %s", contractStrOrig, name64, testStr);

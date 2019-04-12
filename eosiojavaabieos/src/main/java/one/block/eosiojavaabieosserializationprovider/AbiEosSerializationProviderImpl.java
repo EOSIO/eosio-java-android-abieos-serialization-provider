@@ -14,7 +14,7 @@ import one.block.eosiojava.error.serializationprovider.*;
  * Implementation of ISerializationProvider based on a native C++ transformation process
  * compiled via the NDK for Android.
  */
-public class AbiEos implements ISerializationProvider {
+public class AbiEosSerializationProviderImpl implements ISerializationProvider {
     static {
         System.loadLibrary("abieos-lib");
     }
@@ -35,17 +35,17 @@ public class AbiEos implements ISerializationProvider {
 
     private ByteBuffer context;
 
-    private String TAG = "AbiEos";
+    private String TAG = "AbiEosSerializationProviderImpl";
     private static final String NULL_CONTEXT_ERR_MSG = "Null context!  Has destroyContext() already been called?";
     private static final String CANNOT_CREATE_CONTEXT_ERR_MSG = "Could not create abieos context.";
 
     /**
-     * Create a new AbiEos serialization provider instance, initilizing a new context for the C++
+     * Create a new AbiEosSerializationProviderImpl serialization provider instance, initilizing a new context for the C++
      * library to work on automatically.
      *
      * @throws SerializationProviderError - An error is thrown if the context cannot be created.
      */
-    public AbiEos() throws SerializationProviderError {
+    public AbiEosSerializationProviderImpl() throws SerializationProviderError {
         context = create();
         if (null == context) {
             throw new AbieosContextNullError(CANNOT_CREATE_CONTEXT_ERR_MSG);
@@ -54,7 +54,7 @@ public class AbiEos implements ISerializationProvider {
 
     /**
      * Destroy the underlying C++ context, freeing the heap memory that was allocated for it.
-     * This method should always be called before letting the AbiEos instance go out of scope
+     * This method should always be called before letting the AbiEosSerializationProviderImpl instance go out of scope
      * to avoid leaking memory.
      */
     public void destroyContext() {
@@ -328,7 +328,7 @@ public class AbiEos implements ISerializationProvider {
 
     /**
      * Reset the underlying C++ context by destroying and recreating it.  This allows multiple
-     * conversions to be done using the same AbiEos instance.
+     * conversions to be done using the same AbiEosSerializationProviderImpl instance.
      * @throws SerializationProviderError - if the context cannot be re-created.
      */
     private void refreshContext() throws SerializationProviderError {

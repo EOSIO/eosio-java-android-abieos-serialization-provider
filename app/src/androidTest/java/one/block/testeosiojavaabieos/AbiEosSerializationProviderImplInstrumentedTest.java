@@ -7,7 +7,7 @@ import one.block.eosiojava.error.serializationprovider.DeserializeTransactionErr
 import one.block.eosiojava.error.serializationprovider.SerializationProviderError;
 import one.block.eosiojava.error.serializationprovider.SerializeTransactionError;
 import one.block.eosiojava.models.AbiEosSerializationObject;
-import one.block.eosiojavaabieosserializationprovider.AbiEos;
+import one.block.eosiojavaabieosserializationprovider.AbiEosSerializationProviderImpl;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -22,14 +22,14 @@ import static org.junit.Assert.*;
 // android to run.
 
 @RunWith(AndroidJUnit4.class)
-public class AbiEosInstrumentedTest {
+public class AbiEosSerializationProviderImplInstrumentedTest {
 
-    private static AbiEos abieos;
+    private static AbiEosSerializationProviderImpl abieos;
 
     @BeforeClass
     public static void startSetup() {
         try {
-            abieos = new AbiEos();
+            abieos = new AbiEosSerializationProviderImpl();
         } catch (SerializationProviderError serializationProviderError) {
             serializationProviderError.printStackTrace();
             fail();
