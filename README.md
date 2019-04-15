@@ -1,6 +1,6 @@
 # EOSIO SDK for Java Android: ABIEOS Serialization Provider ![EOSIO Alpha](https://img.shields.io/badge/EOSIO-Alpha-blue.svg)
 [![Software License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/EOSIO/eosio-java-android-abieos-serialization-provider/blob/master/LICENSE)
-![Lagnuage Java](https://img.shields.io/badge/Language-C%2B%2B%2FJava-yellow.svg)
+![Language Java](https://img.shields.io/badge/Language-C%2B%2B%2FJava-yellow.svg)
 ![](https://img.shields.io/badge/Deployment%20Target-Android%206%2B-blue.svg)
 
 ## Contents
