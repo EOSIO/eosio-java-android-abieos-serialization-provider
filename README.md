@@ -1,5 +1,5 @@
 # EOSIO SDK for Java Android: ABIEOS Serialization Provider ![EOSIO Alpha](https://img.shields.io/badge/EOSIO-Alpha-blue.svg)
-[![Software License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/EOSIO/eosio-java-android-abieos-serialization-provider/blob/master/LICENSE)
+[![Software License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](./LICENSE)
 ![Language Java](https://img.shields.io/badge/Language-C%2B%2B%2FJava-yellow.svg)
 ![](https://img.shields.io/badge/Deployment%20Target-Android%206%2B-blue.svg)
 
@@ -49,7 +49,7 @@ packagingOptions {
 
 Then refresh your gradle project.
 
-Now ABIEOS Serialization Provider is ready for use within EOSIO SDK for Java according to the [EOSIO SDK for Java Basic Usage instructions](https://github.com/EOSIO/eosio-java/tree/develop#basic-usage).
+Now ABIEOS Serialization Provider is ready for use within EOSIO SDK for Java according to the [EOSIO SDK for Java Basic Usage instructions](https://github.com/EOSIO/eosio-java/tree/master#basic-usage).
 
 ## Direct Usage
 
