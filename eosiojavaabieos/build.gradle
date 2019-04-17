@@ -9,7 +9,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
-        versionName LIB_VERSION
+        versionName lib_version
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
@@ -46,9 +46,9 @@ dependencies {
 }
 
 
-def libraryGroupId = LIB_GROUP_NAME
-def libraryArtifactId = LIB_ID
-def libraryVersion = LIB_VERSION
+def libraryGroupId = lib_group_name
+def libraryArtifactId = lib_id
+def libraryVersion = lib_version
 
 task androidJavadocs(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
@@ -81,20 +81,20 @@ publishing {
             artifact bundleReleaseAar
             artifact androidSourcesJar
             pom {
-                name = LIB_NAME
-                description = LIB_DESCRIPTION
-                url = LIB_URL
+                name = lib_name
+                description = lib_description
+                url = lib_url
                 licenses {
                     license {
-                        name = LIB_LICENSE
-                        url = LIB_LICENSE_URL
+                        name = lib_license
+                        url = lib_license_url
                     }
                 }
                 developers {
                     developer {
-                        id = LIB_DEV_ID
-                        name = LIB_DEV_NAME
-                        email = LIB_DEV_EMAIL
+                        id = lib_dev_id
+                        name = lib_dev_name
+                        email = lib_dev_email
                     }
                 }
             }
@@ -139,13 +139,13 @@ publishing {
 }
 
 artifactory {
-    contextUrl = ARTIFACTORY_URL
+    contextUrl = artifactory_url
     publish {
         repository {
-            repoKey = ARTIFACTORY_REPO
+            repoKey = artifactory_repo
 
-            username = ARTIFACTORY_USRN
-            password = ARTIFACTORY_PWD
+            username = artifactory_username
+            password = artifactory_password
         }
         defaults {
             publications('maven')
