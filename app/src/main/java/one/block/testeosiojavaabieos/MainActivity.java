@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import one.block.eosiojava.error.serializationprovider.SerializationProviderError;
+import one.block.eosiojava.error.serializationProvider.SerializationProviderError;
 import one.block.eosiojavaabieosserializationprovider.AbiEosSerializationProviderImpl;
 
 public class MainActivity extends AppCompatActivity {
