@@ -178,7 +178,7 @@ extern "C"
             return JNI_ERR;
         }
 
-        jclass clazz = env->FindClass("one/block/eosiojavaabieosserializationprovider/AbiEos");
+        jclass clazz = env->FindClass("one/block/eosiojavaabieosserializationprovider/AbiEosSerializationProviderImpl");
         if (NULL == clazz) {
             return JNI_ERR;
         }

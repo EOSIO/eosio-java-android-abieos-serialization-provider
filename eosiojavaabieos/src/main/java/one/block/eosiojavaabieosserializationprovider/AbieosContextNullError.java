@@ -1,15 +1,12 @@
 package one.block.eosiojavaabieosserializationprovider;
 
-import one.block.eosiojava.error.serializationprovider.SerializationProviderError;
+import one.block.eosiojava.error.serializationProvider.SerializationProviderError;
 import org.jetbrains.annotations.NotNull;
 
-//
-// AbieosContextNullError
-// eosio-java-android-abieos-serialization-provider
-//
-// Created by mccoole on 3/22/19
-// Copyright © 2018-2019 block.one.
-//
+/**
+ * Error class is used when there is an exception when the ABIEOS c++ code attempts to create its
+ * working context during initialization.
+ */
 
 public class AbieosContextNullError extends SerializationProviderError {
 
