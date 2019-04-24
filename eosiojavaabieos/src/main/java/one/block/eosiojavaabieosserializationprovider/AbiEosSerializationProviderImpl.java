@@ -70,7 +70,7 @@ public class AbiEosSerializationProviderImpl implements ISerializationProvider {
      * is used instead.
      * @param str - String to convert to 64 bit value.
      * @return - 64 bit value.  Returned as long but should be treated as an unsigned value.
-     * @throws SerializationProviderError
+     * @throws SerializationProviderError - An error is thrown if the context cannot be created.
      */
     public long stringToName64(@Nullable String str) throws SerializationProviderError {
         if (null == context) throw new AbieosContextNullError(NULL_CONTEXT_ERR_MSG);
@@ -81,7 +81,7 @@ public class AbiEosSerializationProviderImpl implements ISerializationProvider {
      * Take the given 64 bit value and converts it to a String.
      * @param name - 64 bit value to convert.  This value should always be treated as unsigned.
      * @return - String equivalent to the 64 bit input value.
-     * @throws SerializationProviderError
+     * @throws SerializationProviderError - - An error is thrown if the context cannot be created.
      */
     @NotNull
     public String name64ToString(long name) throws SerializationProviderError {
@@ -93,7 +93,7 @@ public class AbiEosSerializationProviderImpl implements ISerializationProvider {
      * Returns the underlying context error from the C++ conversion code, if one exists.
      *
      * @return - Current error string from the C++ context, if any.
-     * @throws SerializationProviderError
+     * @throws SerializationProviderError - An error is thrown if the context cannot be created.
      */
     @Nullable
     public String error() throws SerializationProviderError {
