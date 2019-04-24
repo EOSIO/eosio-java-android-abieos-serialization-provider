@@ -1,6 +1,6 @@
 package one.block.eosiojavaabieosserializationprovider;
 
-import one.block.eosiojava.error.serializationprovider.SerializationProviderError;
+import one.block.eosiojava.error.serializationProvider.SerializationProviderError;
 import org.jetbrains.annotations.NotNull;
 
 //

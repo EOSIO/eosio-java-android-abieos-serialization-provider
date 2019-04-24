@@ -8,7 +8,7 @@ import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.util.Map;
-import one.block.eosiojava.error.serializationprovider.*;
+import one.block.eosiojava.error.serializationProvider.*;
 
 /**
  * Implementation of ISerializationProvider based on a native C++ transformation process
