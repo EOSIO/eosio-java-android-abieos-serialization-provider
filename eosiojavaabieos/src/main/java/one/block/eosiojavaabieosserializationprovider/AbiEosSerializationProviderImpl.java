@@ -8,13 +8,13 @@ import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.util.Map;
-import one.block.eosiojava.error.serializationprovider.*;
+import one.block.eosiojava.error.serializationProvider.*;
 
 /**
  * Implementation of ISerializationProvider based on a native C++ transformation process
  * compiled via the NDK for Android.
  */
-public class AbiEos implements ISerializationProvider {
+public class AbiEosSerializationProviderImpl implements ISerializationProvider {
     static {
         System.loadLibrary("abieos-lib");
     }
@@ -35,17 +35,17 @@ public class AbiEos implements ISerializationProvider {
 
     private ByteBuffer context;
 
-    private String TAG = "AbiEos";
+    private String TAG = "AbiEosSerializationProviderImpl";
     private static final String NULL_CONTEXT_ERR_MSG = "Null context!  Has destroyContext() already been called?";
     private static final String CANNOT_CREATE_CONTEXT_ERR_MSG = "Could not create abieos context.";
 
     /**
-     * Create a new AbiEos serialization provider instance, initilizing a new context for the C++
+     * Create a new AbiEosSerializationProviderImpl serialization provider instance, initilizing a new context for the C++
      * library to work on automatically.
      *
      * @throws SerializationProviderError - An error is thrown if the context cannot be created.
      */
-    public AbiEos() throws SerializationProviderError {
+    public AbiEosSerializationProviderImpl() throws SerializationProviderError {
         context = create();
         if (null == context) {
             throw new AbieosContextNullError(CANNOT_CREATE_CONTEXT_ERR_MSG);
@@ -54,7 +54,7 @@ public class AbiEos implements ISerializationProvider {
 
     /**
      * Destroy the underlying C++ context, freeing the heap memory that was allocated for it.
-     * This method should always be called before letting the AbiEos instance go out of scope
+     * This method should always be called before letting the AbiEosSerializationProviderImpl instance go out of scope
      * to avoid leaking memory.
      */
     public void destroyContext() {
@@ -70,7 +70,7 @@ public class AbiEos implements ISerializationProvider {
      * is used instead.
      * @param str - String to convert to 64 bit value.
      * @return - 64 bit value.  Returned as long but should be treated as an unsigned value.
-     * @throws SerializationProviderError
+     * @throws SerializationProviderError - An error is thrown if the context cannot be created.
      */
     public long stringToName64(@Nullable String str) throws SerializationProviderError {
         if (null == context) throw new AbieosContextNullError(NULL_CONTEXT_ERR_MSG);
@@ -81,7 +81,7 @@ public class AbiEos implements ISerializationProvider {
      * Take the given 64 bit value and converts it to a String.
      * @param name - 64 bit value to convert.  This value should always be treated as unsigned.
      * @return - String equivalent to the 64 bit input value.
-     * @throws SerializationProviderError
+     * @throws SerializationProviderError - - An error is thrown if the context cannot be created.
      */
     @NotNull
     public String name64ToString(long name) throws SerializationProviderError {
@@ -93,7 +93,7 @@ public class AbiEos implements ISerializationProvider {
      * Returns the underlying context error from the C++ conversion code, if one exists.
      *
      * @return - Current error string from the C++ context, if any.
-     * @throws SerializationProviderError
+     * @throws SerializationProviderError - An error is thrown if the context cannot be created.
      */
     @Nullable
     public String error() throws SerializationProviderError {
@@ -328,7 +328,7 @@ public class AbiEos implements ISerializationProvider {
 
     /**
      * Reset the underlying C++ context by destroying and recreating it.  This allows multiple
-     * conversions to be done using the same AbiEos instance.
+     * conversions to be done using the same AbiEosSerializationProviderImpl instance.
      * @throws SerializationProviderError - if the context cannot be re-created.
      */
     private void refreshContext() throws SerializationProviderError {
