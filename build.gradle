@@ -11,6 +11,7 @@ buildscript {
         
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.9.5"
     }
 }
 
@@ -18,7 +19,13 @@ allprojects {
     repositories {
         google()
         jcenter()
-        
+        maven {
+            credentials{
+                username artifactory_username
+                password artifactory_password
+            }
+            url artifactory_path_android_libraries
+        }
     }
 }
 
