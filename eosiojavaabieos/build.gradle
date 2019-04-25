@@ -9,7 +9,6 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
-        versionName lib_version
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
@@ -36,7 +35,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'one.block:eosiojava:0.1-alpha-SNAPSHOT'
+    implementation 'one.block:eosiojava:1.0.0'
 
     implementation 'org.jetbrains:annotations:17.0.0'
     implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
@@ -46,9 +45,9 @@ dependencies {
 }
 
 
-def libraryGroupId = lib_group_name
-def libraryArtifactId = lib_id
-def libraryVersion = lib_version
+def libraryGroupId = 'one.block'
+def libraryArtifactId = 'eosiojavaandroidabieosserializationprovider'
+def libraryVersion = '1.0.0'
 
 task androidJavadocs(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
@@ -81,20 +80,20 @@ publishing {
             artifact bundleReleaseAar
             artifact androidSourcesJar
             pom {
-                name = lib_name
-                description = lib_description
-                url = lib_url
+                name = 'EOSIO SDK for Java Android: ABIEOS Serialization Provider'
+                description = 'ABIEOS Serialization Provider is intended to be used in conjunction with EOSIO SDK for Java as a provider plugin.'
+                url = 'https://github.com/EOSIO/eosio-java-android-abieos-serialization-provider/'
                 licenses {
                     license {
-                        name = lib_license
-                        url = lib_license_url
+                        name = 'MIT License'
+                        url = 'https://github.com/EOSIO/eosio-java-android-abieos-serialization-provider/blob/master/LICENSE'
                     }
                 }
                 developers {
                     developer {
-                        id = lib_dev_id
-                        name = lib_dev_name
-                        email = lib_dev_email
+                        id = 'block.one'
+                        name = 'Block One'
+                        email = 'dev@block.one'
                     }
                 }
             }
@@ -139,7 +138,7 @@ publishing {
 }
 
 artifactory {
-    contextUrl = artifactory_url
+    contextUrl = artifactory_contextURL
     publish {
         repository {
             repoKey = artifactory_repo
