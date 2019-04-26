@@ -32,7 +32,7 @@ To use ABIEOS Serialization Provider with EOSIO SDK for Java in your app, add th
 
 ```groovy
 implementation 'one.block:eosiojava:0.0.1'
-    implementation 'one.block:eosiojavaandroidabieosserializationprovider:0.0.1'
+implementation 'one.block:eosiojavaandroidabieosserializationprovider:0.0.1'
 ```
 
 You must also add the following to the `android` section of your application's build.gradle:
