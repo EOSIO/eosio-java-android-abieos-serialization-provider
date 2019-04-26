@@ -31,6 +31,9 @@ android {
         }
     }
 
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
@@ -78,6 +81,7 @@ publishing {
             artifactId libraryArtifactId
 
             artifact bundleReleaseAar
+            artifact androidJavadocsJar
             artifact androidSourcesJar
             pom {
                 name = 'EOSIO SDK for Java Android: ABIEOS Serialization Provider'
