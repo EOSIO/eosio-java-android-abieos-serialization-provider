@@ -31,9 +31,8 @@ To use ABIEOS Serialization Provider with EOSIO SDK for Java in your app, add th
 **TODO** This needs to be updated when the distribution strategy is finalized.
 
 ```groovy
-implementation 'one.block:eosio-java:0.1-alpha'
-implementation 'one.block:eosio-java-android-serialization-provider:0.1-alpha'
-implementation 'one.block:eosio-java-softkey-signature-provider:0.1-alpha'
+implementation 'one.block:eosiojava:0.0.1'
+implementation 'one.block:eosiojavaandroidabieosserializationprovider:0.0.1'
 ```
 
 You must also add the following to the `android` section of your application's build.gradle:

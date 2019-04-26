@@ -31,11 +31,14 @@ android {
         }
     }
 
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'one.block:eosiojava:1.0.0'
+    implementation 'one.block:eosiojava:0.0.1'
 
     implementation 'org.jetbrains:annotations:17.0.0'
     implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
@@ -47,7 +50,7 @@ dependencies {
 
 def libraryGroupId = 'one.block'
 def libraryArtifactId = 'eosiojavaandroidabieosserializationprovider'
-def libraryVersion = '1.0.0'
+def libraryVersion = '0.0.1'
 
 task androidJavadocs(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
@@ -78,6 +81,7 @@ publishing {
             artifactId libraryArtifactId
 
             artifact bundleReleaseAar
+            artifact androidJavadocsJar
             artifact androidSourcesJar
             pom {
                 name = 'EOSIO SDK for Java Android: ABIEOS Serialization Provider'
