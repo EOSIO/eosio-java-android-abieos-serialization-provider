@@ -1,9 +1,10 @@
-# EOSIO SDK for Java Android: ABIEOS Serialization Provider ![EOSIO Alpha](https://img.shields.io/badge/EOSIO-Alpha-blue.svg)
+# EOSIO SDK for Java: Android ABIEOS Serialization Provider ![EOSIO Alpha](https://img.shields.io/badge/EOSIO-Alpha-blue.svg)
+
 [![Software License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](./LICENSE)
 ![Language Java](https://img.shields.io/badge/Language-C%2B%2B%2FJava-yellow.svg)
 ![](https://img.shields.io/badge/Deployment%20Target-Android%206%2B-blue.svg)
 
-ABIEOS Serialization Provider is a pluggable serialization provider for EOSIO SDK for Java.
+Android ABIEOS Serialization Provider is a pluggable serialization provider for EOSIO SDK for Java.
 
 Serialization providers are responsible for ABI-driven transaction and action serialization and deserialization between JSON and binary data representations. This particular serialization provider wraps ABIEOS, a C/C++ library that facilitates this conversion.
 
@@ -33,14 +34,14 @@ This project relies on platform functionality and libraries only present in Andr
 
 ABIEOS Serialization Provider is intended to be used in conjunction with [EOSIO SDK for Java](https://github.com/EOSIO/eosio-java) as a provider plugin.
 
-To use ABIEOS Serialization Provider with EOSIO SDK for Java in your app, add the following modules to your build.gradle:
+To use ABIEOS Serialization Provider with EOSIO SDK for Java in your app, add the following modules to your `build.gradle`:
 
 ```groovy
 implementation 'one.block:eosiojava:0.0.1'
 implementation 'one.block:eosiojavaandroidabieosserializationprovider:0.0.1'
 ```
 
-You must also add the following to the `android` section of your application's build.gradle:
+You must also add the following to the `android` section of your application's `build.gradle`:
 
 ```groovy
 // Needed to get bitcoin-j to produce a valid apk for android.
@@ -84,11 +85,13 @@ try {
 
 ## Android Example App
 
-If you'd like to see EOSIO SDK for Java: ABIEOS Serialization Provider in action, check out our open source [Android Example App](https://github.com/EOSIO/eosio-java-android-example-app) --a working application that fetches an account's token balance and pushes a transfer action.
+If you'd like to see EOSIO SDK for Java: Android ABIEOS Serialization Provider in action, check out our open source [Android Example App](https://github.com/EOSIO/eosio-java-android-example-app)--a working application that fetches an account's token balance and pushes a transfer action.
 
 ## Want to help?
 
 Interested in contributing? That's awesome! Here are some [Contribution Guidelines](./CONTRIBUTING.md) and the [Code of Conduct](./CONTRIBUTING.md#conduct).
+
+We're always looking for ways to improve this library. Check out our [#enhancement Issues](/../../issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) for ways you can pitch in.
 
 ## License
 
