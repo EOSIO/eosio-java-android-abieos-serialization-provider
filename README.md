@@ -3,11 +3,18 @@
 ![Language Java](https://img.shields.io/badge/Language-C%2B%2B%2FJava-yellow.svg)
 ![](https://img.shields.io/badge/Deployment%20Target-Android%206%2B-blue.svg)
 
+ABIEOS Serialization Provider is a pluggable serialization provider for EOSIO SDK for Java.
+
+Serialization providers are responsible for ABI-driven transaction and action serialization and deserialization between JSON and binary data representations. This particular serialization provider wraps ABIEOS, a C/C++ library that facilitates this conversion.
+
+All product and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them.
+
 ## Contents
 
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Direct Usage](#direct-usage)
+- [Android Example App](#android-example-app)
 - [Want to Help?](#want-to-help)
 - [License & Legal](#license)
 
@@ -27,8 +34,6 @@ This project relies on platform functionality and libraries only present in Andr
 ABIEOS Serialization Provider is intended to be used in conjunction with [EOSIO SDK for Java](https://github.com/EOSIO/eosio-java) as a provider plugin.
 
 To use ABIEOS Serialization Provider with EOSIO SDK for Java in your app, add the following modules to your build.gradle:
-
-**TODO** This needs to be updated when the distribution strategy is finalized.
 
 ```groovy
 implementation 'one.block:eosiojava:0.0.1'
@@ -76,6 +81,10 @@ try {
     err.printStackTrace();
 }
 ```
+
+## Android Example App
+
+If you'd like to see EOSIO SDK for Java: ABIEOS Serialization Provider in action, check out our open source [Android Example App](https://github.com/EOSIO/eosio-java-android-example-app) --a working application that fetches an account's token balance and pushes a transfer action.
 
 ## Want to help?
 
