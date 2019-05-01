@@ -4,9 +4,19 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class holds the JSON templates for ABI conversion as immutable static Maps.  These are used
+ * to serialize/deserialize specific types.
+ */
 public class AbiEosJson {
     public static final Map<String, String> abiEosJsonMap = initAbiEosJsonMap();
 
+    /**
+     * Initialize an immutable static map with the JSON templates for ABI and Transaction
+     * serialization and deserialization.  These are used as inputs to the ABIEOS C++
+     * serialization provider implementation.
+     * @return - Immutable map containing the ABI and Transaction JSON serilization/deserialization templates.
+     */
     private static Map<String, String> initAbiEosJsonMap() {
         Map<String, String> jsonMap = new HashMap<>();
 

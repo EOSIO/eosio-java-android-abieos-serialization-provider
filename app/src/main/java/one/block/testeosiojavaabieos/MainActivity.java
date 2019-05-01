@@ -4,7 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import one.block.eosiojavaabieosserializationprovider.AbiEos;
+import one.block.eosiojava.error.serializationProvider.SerializationProviderError;
+import one.block.eosiojavaabieosserializationprovider.AbiEosSerializationProviderImpl;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,12 +16,19 @@ public class MainActivity extends AppCompatActivity {
 
         // Example of a call to a native method
         TextView tv = findViewById(R.id.sample_text);
-        AbiEos abiEos = new AbiEos();
-        String contractStrOrig = "eosio.assert";
-        long name64 = abiEos.stringToName64(contractStrOrig);
-        String testStr = abiEos.name64ToString(name64);
+        String results = "Waiting for AbiEosSerializationProviderImpl";
+        try {
+            AbiEosSerializationProviderImpl abiEosSerializationProviderImpl = new AbiEosSerializationProviderImpl();
+            String contractStrOrig = "eosio.assert";
+            long name64 = abiEosSerializationProviderImpl.stringToName64(contractStrOrig);
+            String testStr = abiEosSerializationProviderImpl.name64ToString(name64);
 
-        String results = String.format("Original: %s\nname64: %d\ntest: %s", contractStrOrig, name64, testStr);
+            results = String
+                    .format("Original: %s\nname64: %d\ntest: %s", contractStrOrig, name64, testStr);
+            tv.setText(results);
+        } catch (SerializationProviderError serializationProviderError) {
+            results = "Error from SerializationProvider: " + serializationProviderError.getLocalizedMessage();
+        }
         tv.setText(results);
     }
 
