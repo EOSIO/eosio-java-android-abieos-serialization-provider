@@ -1,3 +1,4 @@
+![Java Logo](img/java-logo.png) <img src="img/Android_Robot.png" width="100">
 # EOSIO SDK for Java: Android ABIEOS Serialization Provider ![EOSIO Alpha](https://img.shields.io/badge/EOSIO-Alpha-blue.svg)
 
 [![Software License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](./LICENSE)
@@ -8,7 +9,9 @@ Android ABIEOS Serialization Provider is a pluggable serialization provider for 
 
 Serialization providers are responsible for ABI-driven transaction and action serialization and deserialization between JSON and binary data representations. This particular serialization provider wraps ABIEOS, a C/C++ library that facilitates this conversion.
 
-All product and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them.
+*All product and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them.*
+
+*The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the Creative Commons 3.0 Attribution License.*
 
 ## Contents
 
