@@ -107,7 +107,7 @@ project.afterEvaluate {
 
                     ext.addDependency = { dep, scope ->
                         if (dep.group == null || dep.version == null || dep.name == null || dep.name == "unspecified")
-                            return // ignore invalid dependencies
+                            return //  ignore invalid dependencies
 
                         final dependencyNode = dependenciesNode.appendNode('dependency')
                         dependencyNode.appendNode('groupId', dep.group)
