@@ -74,7 +74,6 @@ task androidSourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
 }
 
-//Remove project.afterEvaluate{} block if you are not using Artifactory
 project.afterEvaluate {
     publishing {
         publications {
