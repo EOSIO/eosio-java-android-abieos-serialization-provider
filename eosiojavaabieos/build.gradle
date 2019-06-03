@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+//Remove 'com.jfrog.artifactory' plugin if you are not using Artifactory
 apply plugin: "com.jfrog.artifactory"
 apply plugin: 'maven-publish'
 
@@ -72,6 +73,8 @@ task androidSourcesJar(type: Jar) {
     classifier = 'sources'
     from android.sourceSets.main.java.srcDirs
 }
+
+//Remove project.afterEvaluate{} block if you are not using Artifactory
 project.afterEvaluate {
     publishing {
         publications {
@@ -142,7 +145,7 @@ project.afterEvaluate {
     }
 }
 
-
+//Remove artifactory{} block if you are not using Artifactory
 artifactory {
     contextUrl = artifactory_contextURL
     publish {
