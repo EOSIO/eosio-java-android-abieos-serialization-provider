@@ -67,8 +67,8 @@ script:
   - "./gradlew clean connectedCheck --stacktrace"
 
 deploy:
-  - skip_cleanup: true
   - provider: script
+    skip_cleanup: true
     script: bash scripts/veracode-scan.sh
     on:
       branch:
