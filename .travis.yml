@@ -1,20 +1,19 @@
 language: android
 jdk: oraclejdk8
 env:
- global:
- - DATE=`date +"%Y-%m-%d-%H%M"`
- - ANDROID_API=28
- - EMULATOR_API=25
- - ANDROID_BUILD_TOOLS=28.0.3
- - ABI=x86_64
- - EMU_FLAVOR=default # use google_apis flavor if no default flavor emulator
- - ADB_INSTALL_TIMEOUT=10 # minutes
- - ANDROID_HOME=/usr/local/android-sdk
- - TOOLS=${ANDROID_HOME}/tools
- - PATH=${ANDROID_HOME}:${ANDROID_HOME}/emulator:${TOOLS}:${TOOLS}/bin:${ANDROID_HOME}/platform-tools:${PATH}
- - ARTIFACTORY_CONTEXT_URL=https://blockone.jfrog.io/blockone
- - ARTIFACTORY_REPO=android-libs-scratch-local
- - ARTIFACTORY_LIBS_PATH=https://blockone.jfrog.io/blockone/android-libs
+  global:
+    - DATE=`date +"%Y-%m-%d-%H%M"`
+    - ANDROID_API=28
+    - EMULATOR_API=25
+    - ANDROID_BUILD_TOOLS=28.0.3
+    - ABI=x86_64
+    - EMU_FLAVOR=default # use google_apis flavor if no default flavor emulator
+    - ADB_INSTALL_TIMEOUT=10 # minutes
+    - TOOLS=${ANDROID_HOME}tools
+    - PATH=${ANDROID_HOME}:${ANDROID_HOME}emulator:${TOOLS}:${TOOLS}/bin:${ANDROID_HOME}platform-tools:${PATH}
+    - ARTIFACTORY_CONTEXT_URL=https://blockone.jfrog.io/blockone
+    - ARTIFACTORY_REPO=android-libs-scratch-local
+    - ARTIFACTORY_LIBS_PATH=https://blockone.jfrog.io/blockone/android-libs
 
 dist: trusty
 android:
@@ -39,28 +38,21 @@ cache:
   - $HOME/.android/build-cache
 
 before_script:
-  - echo no | $ANDROID_HOME/tools/bin/avdmanager create avd --force -n test -k "system-images;android-$EMULATOR_API;$EMU_FLAVOR;$ABI" -c 10M
+  - echo no | ${ANDROID_HOME}tools/bin/avdmanager create avd --force -n test -k "system-images;android-$EMULATOR_API;$EMU_FLAVOR;$ABI" -c 10M
   - emulator -verbose -avd test -no-accel -no-snapshot -no-window $AUDIO -camera-back none -camera-front none -selinux permissive -qemu -m 2048 &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
 
 before_install: 
   - echo "artifactory_username=$ARTIFACTORY_USERNAME" > gradle.properties
-  - echo "artifactory_password=$ARTIFACTORY_PW" >> gradle.properties
-  - echo "artifactory_contextURL=https://blockone.jfrog.io/blockone" >> gradle.properties
-  - echo "artifactory_repo=android-libs-scratch-local" >> gradle.properties
-  - echo "artifactory_path_android_libraries=https://blockone.jfrog.io/blockone/android-libs" >> gradle.properties
-  - echo "set gradle.properties"
-  - cat gradle.properties
-  - wget https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/$VERACODE_WRAPPER_VERSION/vosp-api-wrappers-java-$VERACODE_WRAPPER_VERSION.jar
-
-after_script: 
-  - echo "cleaning up properties"
-  - rm gradle.properties
-
+  - echo "artifactory_password=$ARTIFACTORY_PASSWORD" >> gradle.properties
+  - echo "artifactory_path_android_libraries=$ARTIFACTORY_LIBS_PATH" >> gradle.properties
+  - echo "artifactory_contextURL=$ARTIFACTORY_CONTEXT_URL" >> gradle.properties
+  - echo "artifactory_repo=$ARTIFACTORY_REPO" >> gradle.properties
 
 
 install:
+  - wget https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/$VERACODE_WRAPPER_VERSION/vosp-api-wrappers-java-$VERACODE_WRAPPER_VERSION.jar
   - touch $HOME/.android/repositories.cfg
   - yes | sdkmanager "platform-tools" >/dev/null
   - yes | sdkmanager "build-tools;$ANDROID_BUILD_TOOLS" >/dev/null
@@ -74,13 +66,44 @@ script:
   - "./gradlew clean check --stacktrace"
   - "./gradlew clean connectedCheck --stacktrace"
 
-# script: 
-#   - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then bash ./scripts/veracode-scan.sh; fi'
-
 deploy:
+  - skip_cleanup: true
   - provider: script
     script: bash scripts/veracode-scan.sh
     on:
       branch:
         - develop
         - /^release.*$/
+  - provider: script
+    skip_cleanup: true
+    script: "bash scripts/deploy-artifactory.sh 'android-libs-feature-local'"
+    on:
+      branch: 
+        - add-artifactory-deploy # temporary
+        - /^feature.*$/
+  # develop deploys      
+  - provider: script
+    skip_cleanup: true
+    script: "bash scripts/deploy-artifactory.sh 'android-libs-dev-local'"
+    on:
+      branch: 
+        - develop
+  # release branches and      
+  - provider: script
+    skip_cleanup: true
+    script: "bash scripts/deploy-artifactory.sh 'android-libs-release-local'"
+    on:
+      branch: 
+        - master
+        - /^release.*$/
+  # tagged releases from master, go to distribution
+  - provider: script
+    skip_cleanup: true
+    script: "bash scripts/deploy-artifactory.sh 'eosiojavaandroidabieosserializationprovider-product-eosio-dist'" 
+    on:
+      tags: true
+      branch: master
+
+after_deploy: 
+  - echo "cleaning up properties"
+  - rm gradle.properties
