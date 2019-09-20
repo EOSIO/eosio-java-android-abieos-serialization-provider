@@ -52,7 +52,6 @@ before_install:
 
 
 install:
-  - wget https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/$VERACODE_WRAPPER_VERSION/vosp-api-wrappers-java-$VERACODE_WRAPPER_VERSION.jar
   - touch $HOME/.android/repositories.cfg
   - yes | sdkmanager "platform-tools" >/dev/null
   - yes | sdkmanager "build-tools;$ANDROID_BUILD_TOOLS" >/dev/null
@@ -75,12 +74,6 @@ before_deploy:
   - echo "artifactory_repo=$ARTIFACTORY_REPO" >> gradle.properties
 
 deploy:
-  - provider: script
-    skip_cleanup: true
-    script: bash scripts/veracode-scan.sh
-    on:
-      all_branches: true
-      condition: $TRAVIS_BRANCH == develop || ${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH} =~ ^release\/.*$
   - provider: script
     skip_cleanup: true
     script: "bash scripts/deploy-artifactory.sh 'android-libs-feature-local'"
