@@ -19,6 +19,7 @@ Serialization providers are responsible for ABI-driven transaction and action se
 - [Installation](#installation)
 - [Direct Usage](#direct-usage)
 - [Android Example App](#android-example-app)
+- [Releases](#releases)
 - [Want to Help?](#want-to-help)
 - [License & Legal](#license)
 
@@ -40,8 +41,8 @@ ABIEOS Serialization Provider is intended to be used in conjunction with [EOSIO 
 To use ABIEOS Serialization Provider with EOSIO SDK for Java in your app, add the following modules to your `build.gradle`:
 
 ```groovy
-implementation 'one.block:eosiojava:0.1.0'
-implementation 'one.block:eosiojavaandroidabieosserializationprovider:0.1.0'
+implementation 'one.block:eosiojava:0.1.2'
+implementation 'one.block:eosiojavaandroidabieosserializationprovider:0.1.1'
 ```
 
 You must also add the following to the `android` section of your application's `build.gradle`:
@@ -91,6 +92,12 @@ try {
 ## Android Example App
 
 If you'd like to see EOSIO SDK for Java: Android ABIEOS Serialization Provider in action, check out our open source [Android Example App](https://github.com/EOSIO/eosio-java-android-example-app)--a working application that fetches an account's token balance and pushes a transfer action.
+
+## Releases
+
+2/26/20
+
+Version 0.1.1 The version consumes the new eosio-java library version 0.1.2.
 
 ## Want to help?
 
