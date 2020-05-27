@@ -1,0 +1,26 @@
+[
+  {
+    "level": "INFO",
+    "message": "Start JSON generation. Platform version: 21 min SDK version: arm64-v8a",
+    "file": "/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/app/src/main/cpp/CMakeLists.txt",
+    "tag": "debug|arm64-v8a"
+  },
+  {
+    "level": "INFO",
+    "message": "No CMake version was specified in build.gradle. Using default version 3.10.2.",
+    "file": "/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/app/src/main/cpp/CMakeLists.txt",
+    "tag": "debug|arm64-v8a"
+  },
+  {
+    "level": "INFO",
+    "message": "JSON \u0027/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/app/.cxx/cmake/debug/arm64-v8a/android_gradle_build.json\u0027 was up-to-date",
+    "file": "/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/app/src/main/cpp/CMakeLists.txt",
+    "tag": "debug|arm64-v8a"
+  },
+  {
+    "level": "INFO",
+    "message": "JSON generation completed without problems",
+    "file": "/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/app/src/main/cpp/CMakeLists.txt",
+    "tag": "debug|arm64-v8a"
+  }
+]

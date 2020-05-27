@@ -1,0 +1,7 @@
+Executable : /Users/jon.lamarr/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja
+arguments : 
+-C
+/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/.cxx/cmake/debug/armeabi-v7a
+abieos-lib
+jvmArgs : 
+
