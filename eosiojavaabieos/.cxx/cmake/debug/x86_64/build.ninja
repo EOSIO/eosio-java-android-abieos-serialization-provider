@@ -49,7 +49,7 @@ build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
   restat = 1
 build edit_cache: phony CMakeFiles/edit_cache.util
 # =============================================================================
-# Object build statements for SHARED_LIBRARY target abieos-lib
+# Object build statements for STATIC_LIBRARY target abieos-lib
 
 
 #############################################
@@ -57,44 +57,60 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 
 build cmake_object_order_depends_target_abieos-lib: phony
 build CMakeFiles/abieos-lib.dir/abieos-lib.cpp.o: CXX_COMPILER__abieos-lib /Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/src/main/cpp/abieos-lib.cpp || cmake_object_order_depends_target_abieos-lib
-  DEFINES = -Dabieos_lib_EXPORTS
   DEP_FILE = CMakeFiles/abieos-lib.dir/abieos-lib.cpp.o.d
-  FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  --target=x86_64-linux-android29 -march=x86-64 -std=gnu++1z --target=x86_64-linux-android29 -O0 -fno-limit-debug-info  -fPIC
+  FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  --target=x86_64-linux-android29 -march=x86-64 -std=c++17 -O0 -fno-limit-debug-info  -fPIC
   INCLUDES = -I/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/src/main/cpp/include -I/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/src/main/cpp/../../../../abieos/include -I/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/src/main/cpp/../../../../abieos/external/rapidjson/include
   OBJECT_DIR = CMakeFiles/abieos-lib.dir
   OBJECT_FILE_DIR = CMakeFiles/abieos-lib.dir
 build CMakeFiles/abieos-lib.dir/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/src/abieos.cpp.o: CXX_COMPILER__abieos-lib /Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/src/abieos.cpp || cmake_object_order_depends_target_abieos-lib
-  DEFINES = -Dabieos_lib_EXPORTS
   DEP_FILE = CMakeFiles/abieos-lib.dir/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/src/abieos.cpp.o.d
-  FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  --target=x86_64-linux-android29 -march=x86-64 -std=gnu++1z --target=x86_64-linux-android29 -O0 -fno-limit-debug-info  -fPIC
+  FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  --target=x86_64-linux-android29 -march=x86-64 -std=c++17 -O0 -fno-limit-debug-info  -fPIC
   INCLUDES = -I/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/src/main/cpp/include -I/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/src/main/cpp/../../../../abieos/include -I/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/src/main/cpp/../../../../abieos/external/rapidjson/include
   OBJECT_DIR = CMakeFiles/abieos-lib.dir
   OBJECT_FILE_DIR = CMakeFiles/abieos-lib.dir/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/src
+build CMakeFiles/abieos-lib.dir/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/src/abi.cpp.o: CXX_COMPILER__abieos-lib /Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/src/abi.cpp || cmake_object_order_depends_target_abieos-lib
+  DEP_FILE = CMakeFiles/abieos-lib.dir/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/src/abi.cpp.o.d
+  FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  --target=x86_64-linux-android29 -march=x86-64 -std=c++17 -O0 -fno-limit-debug-info  -fPIC
+  INCLUDES = -I/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/src/main/cpp/include -I/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/src/main/cpp/../../../../abieos/include -I/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/src/main/cpp/../../../../abieos/external/rapidjson/include
+  OBJECT_DIR = CMakeFiles/abieos-lib.dir
+  OBJECT_FILE_DIR = CMakeFiles/abieos-lib.dir/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/src
+build CMakeFiles/abieos-lib.dir/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/src/crypto.cpp.o: CXX_COMPILER__abieos-lib /Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/src/crypto.cpp || cmake_object_order_depends_target_abieos-lib
+  DEP_FILE = CMakeFiles/abieos-lib.dir/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/src/crypto.cpp.o.d
+  FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  --target=x86_64-linux-android29 -march=x86-64 -std=c++17 -O0 -fno-limit-debug-info  -fPIC
+  INCLUDES = -I/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/src/main/cpp/include -I/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/src/main/cpp/../../../../abieos/include -I/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/src/main/cpp/../../../../abieos/external/rapidjson/include
+  OBJECT_DIR = CMakeFiles/abieos-lib.dir
+  OBJECT_FILE_DIR = CMakeFiles/abieos-lib.dir/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/src
+build CMakeFiles/abieos-lib.dir/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/src/fuzzer.cpp.o: CXX_COMPILER__abieos-lib /Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/src/fuzzer.cpp || cmake_object_order_depends_target_abieos-lib
+  DEP_FILE = CMakeFiles/abieos-lib.dir/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/src/fuzzer.cpp.o.d
+  FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  --target=x86_64-linux-android29 -march=x86-64 -std=c++17 -O0 -fno-limit-debug-info  -fPIC
+  INCLUDES = -I/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/src/main/cpp/include -I/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/src/main/cpp/../../../../abieos/include -I/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/src/main/cpp/../../../../abieos/external/rapidjson/include
+  OBJECT_DIR = CMakeFiles/abieos-lib.dir
+  OBJECT_FILE_DIR = CMakeFiles/abieos-lib.dir/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/src
+build CMakeFiles/abieos-lib.dir/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/include/eosio/fpconv.c.o: C_COMPILER__abieos-lib /Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/include/eosio/fpconv.c || cmake_object_order_depends_target_abieos-lib
+  DEP_FILE = CMakeFiles/abieos-lib.dir/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/include/eosio/fpconv.c.o.d
+  FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC
+  INCLUDES = -I/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/src/main/cpp/include -I/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/src/main/cpp/../../../../abieos/include -I/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/src/main/cpp/../../../../abieos/external/rapidjson/include
+  OBJECT_DIR = CMakeFiles/abieos-lib.dir
+  OBJECT_FILE_DIR = CMakeFiles/abieos-lib.dir/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/include/eosio
 
 # =============================================================================
-# Link build statements for SHARED_LIBRARY target abieos-lib
+# Link build statements for STATIC_LIBRARY target abieos-lib
 
 
 #############################################
-# Link the shared library /Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/build/intermediates/cmake/debug/obj/x86_64/libabieos-lib.so
+# Link the static library libabieos-lib.a
 
-build /Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/build/intermediates/cmake/debug/obj/x86_64/libabieos-lib.so: CXX_SHARED_LIBRARY_LINKER__abieos-lib CMakeFiles/abieos-lib.dir/abieos-lib.cpp.o CMakeFiles/abieos-lib.dir/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/src/abieos.cpp.o | /Users/jon.lamarr/Library/Android/sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/x86_64-linux-android/21/liblog.so
-  LANGUAGE_COMPILE_FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  --target=x86_64-linux-android29 -march=x86-64 -std=gnu++1z --target=x86_64-linux-android29 -O0 -fno-limit-debug-info
-  LINK_FLAGS = -Wl,--exclude-libs,libgcc.a -Wl,--exclude-libs,libgcc_real.a -Wl,--exclude-libs,libatomic.a -static-libstdc++ -Wl,--build-id -Wl,--fatal-warnings -Wl,--no-undefined -Qunused-arguments
-  LINK_LIBRARIES = -llog -latomic -lm
-  LINK_PATH = -L/Users/jon.lamarr/Library/Android/sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/x86_64-linux-android/21
+build libabieos-lib.a: CXX_STATIC_LIBRARY_LINKER__abieos-lib CMakeFiles/abieos-lib.dir/abieos-lib.cpp.o CMakeFiles/abieos-lib.dir/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/src/abieos.cpp.o CMakeFiles/abieos-lib.dir/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/src/abi.cpp.o CMakeFiles/abieos-lib.dir/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/src/crypto.cpp.o CMakeFiles/abieos-lib.dir/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/src/fuzzer.cpp.o CMakeFiles/abieos-lib.dir/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/abieos/include/eosio/fpconv.c.o
+  LANGUAGE_COMPILE_FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  --target=x86_64-linux-android29 -march=x86-64 -std=c++17 -O0 -fno-limit-debug-info
   OBJECT_DIR = CMakeFiles/abieos-lib.dir
   POST_BUILD = :
   PRE_LINK = :
-  SONAME = libabieos-lib.so
-  SONAME_FLAG = -Wl,-soname,
-  TARGET_FILE = /Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/build/intermediates/cmake/debug/obj/x86_64/libabieos-lib.so
-  TARGET_PDB = abieos-lib.so.dbg
+  TARGET_FILE = libabieos-lib.a
+  TARGET_PDB = abieos-lib.a.dbg
 # =============================================================================
 # Target aliases.
 
-build abieos-lib: phony /Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/build/intermediates/cmake/debug/obj/x86_64/libabieos-lib.so
-build libabieos-lib.so: phony /Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/build/intermediates/cmake/debug/obj/x86_64/libabieos-lib.so
+build abieos-lib: phony libabieos-lib.a
 # =============================================================================
 # Folder targets.
 
@@ -106,7 +122,7 @@ build libabieos-lib.so: phony /Users/jon.lamarr/Desktop/Dev/eosio-java-android-a
 #############################################
 # The main all target.
 
-build all: phony /Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/build/intermediates/cmake/debug/obj/x86_64/libabieos-lib.so
+build all: phony libabieos-lib.a
 
 #############################################
 # Make the all target the default.

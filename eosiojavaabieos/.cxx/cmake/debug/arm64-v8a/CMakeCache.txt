@@ -21,7 +21,7 @@ ANDROID_ABI:UNINITIALIZED=arm64-v8a
 ANDROID_NDK:UNINITIALIZED=/Users/jon.lamarr/Library/Android/sdk/ndk/21.1.6352462
 
 //No help, variable specified on the command line.
-ANDROID_PLATFORM:UNINITIALIZED=android-21
+ANDROID_PLATFORM:UNINITIALIZED=android-29
 
 //No help, variable specified on the command line.
 CMAKE_ANDROID_ARCH_ABI:UNINITIALIZED=arm64-v8a
@@ -199,7 +199,7 @@ CMAKE_STRIP:FILEPATH=/Users/jon.lamarr/Library/Android/sdk/ndk/21.1.6352462/tool
 CMAKE_SYSTEM_NAME:UNINITIALIZED=Android
 
 //No help, variable specified on the command line.
-CMAKE_SYSTEM_VERSION:UNINITIALIZED=21
+CMAKE_SYSTEM_VERSION:UNINITIALIZED=29
 
 //The CMake toolchain file
 CMAKE_TOOLCHAIN_FILE:FILEPATH=/Users/jon.lamarr/Library/Android/sdk/ndk/21.1.6352462/build/cmake/android.toolchain.cmake
@@ -217,10 +217,10 @@ Project_BINARY_DIR:STATIC=/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieo
 Project_SOURCE_DIR:STATIC=/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/src/main/cpp
 
 //Dependencies for the target
-abieos-lib_LIB_DEPENDS:STATIC=general;/Users/jon.lamarr/Library/Android/sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/aarch64-linux-android/21/liblog.so;
+abieos-lib_LIB_DEPENDS:STATIC=general;/Users/jon.lamarr/Library/Android/sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/aarch64-linux-android/29/liblog.so;
 
 //Path to a library.
-log-lib:FILEPATH=/Users/jon.lamarr/Library/Android/sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/aarch64-linux-android/21/liblog.so
+log-lib:FILEPATH=/Users/jon.lamarr/Library/Android/sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/aarch64-linux-android/29/liblog.so
 
 
 ########################

@@ -3,9 +3,9 @@
 
 # Sets the minimum version of CMake required to build the native library.
 
-cmake_minimum_required(VERSION 3.4.1)
+cmake_minimum_required(VERSION 3.8.0)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++1z --target=x86_64-linux-android29")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
@@ -16,11 +16,15 @@ add_library( # Sets the name of the library.
         abieos-lib
 
         # Sets the library as a shared library.
-        SHARED
+        STATIC
 
         # Provides a relative path to your source file(s).
         abieos-lib.cpp
-        ../../../../abieos/src/abieos.cpp)
+        ../../../../abieos/src/abieos.cpp
+        ../../../../abieos/src/abi.cpp
+        ../../../../abieos/src/crypto.cpp
+        ../../../../abieos/src/fuzzer.cpp
+        ../../../../abieos/include/eosio/fpconv.c)
 
 target_include_directories(abieos-lib PRIVATE include ../../../../abieos/include ../../../../abieos/external/rapidjson/include)
 

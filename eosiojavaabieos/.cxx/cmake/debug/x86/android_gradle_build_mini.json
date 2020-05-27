@@ -13,7 +13,7 @@
       "artifactName": "abieos-lib",
       "buildCommand": "/Users/jon.lamarr/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/.cxx/cmake/debug/x86\" abieos-lib",
       "abi": "x86",
-      "output": "/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/build/intermediates/cmake/debug/obj/x86/libabieos-lib.so"
+      "output": "/Users/jon.lamarr/Desktop/Dev/eosio-java-android-abieos-serialization-provider/eosiojavaabieos/.cxx/cmake/debug/x86/libabieos-lib.a"
     }
   }
 }
