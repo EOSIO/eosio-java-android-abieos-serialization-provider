@@ -20,6 +20,10 @@
       "cmakeExecutable": "/Users/jon.lamarr/Library/Android/sdk/cmake/3.10.2.4988404/bin/cmake",
       "variables": [
         {
+          "name": "CMAKE_CXX_FLAGS",
+          "value": "--target\u003dx86_64-linux-android29 -march\u003dx86-64"
+        },
+        {
           "name": "CMAKE_BUILD_TYPE",
           "value": "Debug"
         },
@@ -84,7 +88,7 @@
     "cFlagsList": [],
     "cmakeSettingsConfiguration": "android-gradle-plugin-predetermined-name",
     "cppFlagsList": [
-      ""
+      "--target\u003dx86_64-linux-android29 -march\u003dx86-64"
     ],
     "isDebuggableEnabled": true,
     "module": {
