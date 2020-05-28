@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 3.8.0)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+set(CMAKE_CXX_FLAGS "-std=c++17 --target=x86_64-linux-android29 -march=x86-64")
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
@@ -20,7 +20,17 @@ add_library( # Sets the name of the library.
 
         # Provides a relative path to your source file(s).
         abieos-lib.cpp
-        ../../../../abieos/build/libabieos.so)
+        ../../../../abieos/src/abieos.cpp
+        ../../../../abieos/src/abi.cpp
+        ../../../../abieos/src/crypto.cpp
+        ../../../../abieos/src/fuzzer.cpp
+        ../../../../abieos/include/eosio/fpconv.cpp)
+
+#include(../../../../abieos/build/libabieos.so)
+
+#set_target_properties(abieos-lib PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
+
+target_include_directories(abieos-lib PRIVATE include ../../../../abieos/include ../../../../abieos/external/rapidjson/include)
 
 #target_include_directories(abieos-lib PRIVATE include ../../../../abieos/include ../../../../abieos/external/rapidjson/include)
 #LINK_DIRECTORIES(../../../../abieos/build)
