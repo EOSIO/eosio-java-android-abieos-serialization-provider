@@ -51,7 +51,7 @@ dependencies {
 
 def libraryGroupId = 'one.block'
 def libraryArtifactId = 'eosiojavaandroidabieosserializationprovider'
-def libraryVersion = '0.1.1'
+def libraryVersion = '0.1.1-abieos-update-5'
 
 task androidJavadocs(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
