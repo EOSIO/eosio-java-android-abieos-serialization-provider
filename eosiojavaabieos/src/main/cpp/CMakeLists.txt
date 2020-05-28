@@ -16,7 +16,7 @@ add_library( # Sets the name of the library.
         abieos-lib
 
         # Sets the library as a shared library.
-        STATIC
+        SHARED
 
         # Provides a relative path to your source file(s).
         abieos-lib.cpp

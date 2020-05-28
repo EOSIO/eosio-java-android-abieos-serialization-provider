@@ -14,7 +14,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
-                cppFlags "--target=x86_64-linux-android29 -march=x86-64"
+                cppFlags "" // --target=x86_64-linux-android29 -march=x86-64
             }
         }
     }
