@@ -20,14 +20,10 @@ add_library( # Sets the name of the library.
 
         # Provides a relative path to your source file(s).
         abieos-lib.cpp
-        ../../../../abieos/src/abieos.cpp
-        ../../../../abieos/src/abi.cpp
-        ../../../../abieos/src/crypto.cpp
-        ../../../../abieos/src/fuzzer.cpp
-        ../../../../abieos/include/eosio/fpconv.c)
+        ../../../../abieos/build/libabieos.so)
 
-target_include_directories(abieos-lib PRIVATE include ../../../../abieos/include ../../../../abieos/external/rapidjson/include)
-
+#target_include_directories(abieos-lib PRIVATE include ../../../../abieos/include ../../../../abieos/external/rapidjson/include)
+#LINK_DIRECTORIES(../../../../abieos/build)
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
 # default, you only need to specify the name of the public NDK library
@@ -40,6 +36,11 @@ find_library( # Sets the name of the path variable.
         # Specifies the name of the NDK library that
         # you want CMake to locate.
         log)
+
+#find_library(
+#        TEST
+#        libabieos
+#)
 
 # Specifies libraries CMake should link to your target library. You
 # can link multiple libraries, such as libraries you define in this
