@@ -5,7 +5,8 @@
 
 cmake_minimum_required(VERSION 3.8.0)
 
-set(CMAKE_CXX_FLAGS "-std=c++17 --target=x86_64-linux-android29 -march=x86-64")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -DABIEOS_NO_INT128")
+#set(CMAKE_CXX_FLAGS "-std=c++17 --target=x86_64-linux-android29 -march=x86-64")
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
@@ -24,7 +25,7 @@ add_library( # Sets the name of the library.
         ../../../../abieos/src/abi.cpp
         ../../../../abieos/src/crypto.cpp
         ../../../../abieos/src/fuzzer.cpp
-        ../../../../abieos/include/eosio/fpconv.cpp)
+        ../../../../abieos/include/eosio/fpconv.c)
 
 #include(../../../../abieos/build/libabieos.so)
 
