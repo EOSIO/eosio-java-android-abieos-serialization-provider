@@ -5,7 +5,11 @@
 
 cmake_minimum_required(VERSION 3.8.0)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -DABIEOS_NO_INT128")
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -DABIEOS_NO_INT128")
+endif()
 #set(CMAKE_CXX_FLAGS "-std=c++17 --target=x86_64-linux-android29 -march=x86-64")
 
 # Creates and names a library, sets it as either STATIC
