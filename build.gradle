@@ -22,10 +22,10 @@ allprojects {
         //Remove maven{} block if you are not using Artifactory, otherwise define your own values in the gradle.properties file
         maven {
             credentials{
-                username 'contractor'
-                password 'contractor'
+                username artifactory_username
+                password artifactory_password
             }
-            url 'https://blockone.jfrog.io/blockone/android-libs'
+            url artifactory_path_android_libraries
         }
     }
 }
