@@ -3,7 +3,9 @@
 
 # Sets the minimum version of CMake required to build the native library.
 
-cmake_minimum_required(VERSION 3.8.0)
+cmake_minimum_required(VERSION 3.4.1)
+
+set(ABIEOS_SUBMODULE_PATH ../../../../abieos)
 
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
@@ -24,14 +26,14 @@ add_library( # Sets the name of the library.
 
         # Provides a relative path to your source file(s).
         abieos-lib.cpp
-        ../../../../abieos/src/abieos.cpp
-        ../../../../abieos/src/abi.cpp
-        ../../../../abieos/src/crypto.cpp
-        ../../../../abieos/src/fuzzer.cpp
-        ../../../../abieos/include/eosio/fpconv.c)
+        ${ABIEOS_SUBMODULE_PATH}/src/abieos.cpp
+        ${ABIEOS_SUBMODULE_PATH}/src/abi.cpp
+        ${ABIEOS_SUBMODULE_PATH}/src/crypto.cpp
+        ${ABIEOS_SUBMODULE_PATH}/src/fuzzer.cpp
+        ${ABIEOS_SUBMODULE_PATH}/include/eosio/fpconv.c)
 
 
-target_include_directories(abieos-lib PRIVATE include ../../../../abieos/include ../../../../abieos/external/rapidjson/include)
+target_include_directories(abieos-lib PRIVATE include ${ABIEOS_SUBMODULE_PATH}/include ${ABIEOS_SUBMODULE_PATH}/external/rapidjson/include)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
