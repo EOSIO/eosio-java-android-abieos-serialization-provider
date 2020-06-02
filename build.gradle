@@ -4,7 +4,6 @@ buildscript {
     repositories {
         google()
         jcenter()
-
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.4.0'
@@ -34,9 +33,9 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-task gitSubmodules {
+task gitSubmodulesUpdate {
     exec {
         commandLine 'git', 'submodule', 'update', '--recursive'
     }
 }
-clean.dependsOn gitSubmodules
+clean.dependsOn gitSubmodulesUpdate
