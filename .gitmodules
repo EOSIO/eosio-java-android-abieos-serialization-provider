@@ -1,4 +1,4 @@
 [submodule "abieos"]
-	path = abieos
-	url = git@github.com:EOSIO/abieos.git
+    path = abieos
+    url = git@github.com:EOSIO/abieos.git
     branch = int128
