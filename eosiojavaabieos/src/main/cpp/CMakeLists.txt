@@ -10,7 +10,6 @@ if(CMAKE_SIZEOF_VOID_P EQUAL 8)
 elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -DABIEOS_NO_INT128")
 endif()
-#set(CMAKE_CXX_FLAGS "-std=c++17 --target=x86_64-linux-android29 -march=x86-64")
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
@@ -31,14 +30,9 @@ add_library( # Sets the name of the library.
         ../../../../abieos/src/fuzzer.cpp
         ../../../../abieos/include/eosio/fpconv.c)
 
-#include(../../../../abieos/build/libabieos.so)
-
-#set_target_properties(abieos-lib PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
 
 target_include_directories(abieos-lib PRIVATE include ../../../../abieos/include ../../../../abieos/external/rapidjson/include)
 
-#target_include_directories(abieos-lib PRIVATE include ../../../../abieos/include ../../../../abieos/external/rapidjson/include)
-#LINK_DIRECTORIES(../../../../abieos/build)
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
 # default, you only need to specify the name of the public NDK library
@@ -51,11 +45,6 @@ find_library( # Sets the name of the path variable.
         # Specifies the name of the NDK library that
         # you want CMake to locate.
         log)
-
-#find_library(
-#        TEST
-#        libabieos
-#)
 
 # Specifies libraries CMake should link to your target library. You
 # can link multiple libraries, such as libraries you define in this

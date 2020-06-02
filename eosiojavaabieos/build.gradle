@@ -14,7 +14,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
-                cppFlags "" // --target=x86_64-linux-android29 -march=x86-64
+                cppFlags ""
             }
         }
     }
@@ -51,7 +51,7 @@ dependencies {
 
 def libraryGroupId = 'one.block'
 def libraryArtifactId = 'eosiojavaandroidabieosserializationprovider'
-def libraryVersion = '0.1.1-abieos-update-4'
+def libraryVersion = '0.1.1-abieos'
 
 task androidJavadocs(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
