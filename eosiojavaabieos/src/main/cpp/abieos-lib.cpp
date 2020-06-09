@@ -2,7 +2,7 @@
 #include <jni.h>
 #include <string>
 
-#include "../../../../abieos/src/abieos.h"
+#include "abieos.h"
 
 extern "C"
 {
@@ -188,3 +188,5 @@ extern "C"
         return ret == 0 ? JNI_VERSION_1_6 : JNI_ERR;
     }
 }
+
+
