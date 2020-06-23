@@ -5,7 +5,13 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+set(ABIEOS_SUBMODULE_PATH ../../../../abieos)
+
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -DABIEOS_NO_INT128")
+endif()
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
@@ -20,9 +26,14 @@ add_library( # Sets the name of the library.
 
         # Provides a relative path to your source file(s).
         abieos-lib.cpp
-        abieos.cpp)
+        ${ABIEOS_SUBMODULE_PATH}/src/abieos.cpp
+        ${ABIEOS_SUBMODULE_PATH}/src/abi.cpp
+        ${ABIEOS_SUBMODULE_PATH}/src/crypto.cpp
+        ${ABIEOS_SUBMODULE_PATH}/src/fuzzer.cpp
+        ${ABIEOS_SUBMODULE_PATH}/include/eosio/fpconv.c)
 
-target_include_directories(abieos-lib PRIVATE rapidjson/include date/include)
+
+target_include_directories(abieos-lib PRIVATE include ${ABIEOS_SUBMODULE_PATH}/include ${ABIEOS_SUBMODULE_PATH}/external/rapidjson/include)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by

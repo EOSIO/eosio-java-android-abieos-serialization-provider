@@ -95,6 +95,10 @@ If you'd like to see EOSIO SDK for Java: Android ABIEOS Serialization Provider i
 
 ## Releases
 
+6/23/20
+
+Version 0.1.2 The version includes support for newer ABI versions.
+
 2/27/20
 
 Version 0.1.1 The version consumes the new eosio-java library version 0.1.2.

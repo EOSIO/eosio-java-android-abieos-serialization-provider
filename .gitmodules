@@ -1,0 +1,3 @@
+[submodule "abieos"]
+    path = abieos
+    url = https://github.com/EOSIO/abieos.git
