@@ -26,6 +26,7 @@ import static org.junit.Assert.*;
 public class AbiEosSerializationProviderImplInstrumentedTest {
 
     private static AbiEosSerializationProviderImpl abieos;
+    private static final String RETURN_VALUE_ABI = "{\"version\":\"eosio::abi/1.2\",\"types\":[],\"structs\":[{\"name\":\"retval.complex\",\"base\":\"\",\"fields\":[{\"name\":\"user\",\"type\":\"name\"}]},{\"name\":\"retval.simple\",\"base\":\"\",\"fields\":[{\"name\":\"user\",\"type\":\"name\"}]},{\"name\":\"retval.null\",\"base\":\"\",\"fields\":[{\"name\":\"user\",\"type\":\"name\"}]},{\"name\":\"returnValue\",\"base\":\"\",\"fields\":[{\"name\":\"id\",\"type\":\"uint32\"},{\"name\":\"name\",\"type\":\"name\"}]}],\"actions\":[{\"name\":\"retval.complex\",\"type\":\"retval.complex\",\"ricardian_contract\":\"\"},{\"name\":\"retval.simple\",\"type\":\"retval.simple\",\"ricardian_contract\":\"\"},{\"name\":\"retval.null\",\"type\":\"retval.null\",\"ricardian_contract\":\"\"}],\"tables\":[],\"ricardian_clauses\":[],\"error_messages\":[],\"abi_extensions\":[],\"variants\":[]}";
 
     @BeforeClass
     public static void startSetup() {
@@ -117,6 +118,91 @@ public class AbiEosSerializationProviderImplInstrumentedTest {
 
         assertNotNull(json);
         assertEquals(json, jsonResult);
+    }
+
+    @Test
+    public void hexToJsonSimpleReturnValue() {
+        String hex = "0a000000";
+        String returnValueType = "uint32";
+        String jsonResult = "10";
+        String json = null;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject("contract", "retval.simple", returnValueType, RETURN_VALUE_ABI);
+            serializationObject.setHex(hex);
+            abieos.deserialize(serializationObject);
+            json = serializationObject.getJson();
+        } catch (DeserializeError err) {
+            err.printStackTrace();
+            fail("Should not have thrown an error.");
+        }
+
+        assertNotNull(json);
+        assertEquals(json, jsonResult);
+    }
+
+    @Test
+    public void hexToJsonComplexReturnValue() {
+        String hex = "d2040000000000000090b1ca";
+        String returnValueType = "returnValue";
+        String jsonResult = "{\"id\":1234,\"name\":\"test\"}";
+        String json = null;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject("contract", "retval.complex", returnValueType, RETURN_VALUE_ABI);
+            serializationObject.setHex(hex);
+            abieos.deserialize(serializationObject);
+            json = serializationObject.getJson();
+        } catch (DeserializeError err) {
+            err.printStackTrace();
+            fail("Should not have thrown an error.");
+        }
+
+        assertNotNull(json);
+        assertEquals(json, jsonResult);
+    }
+
+    @Test
+    public void hexToJsonNullReturnValueShouldDefaultToActionData() {
+        String hex = "000000000090b1ca";
+        String returnValueType = null;
+        String jsonResult = "{\"user\":\"test\"}";
+        String json = null;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject("contract", "retval.null", returnValueType, RETURN_VALUE_ABI);
+            serializationObject.setHex(hex);
+            abieos.deserialize(serializationObject);
+            json = serializationObject.getJson();
+        } catch (DeserializeError err) {
+            err.printStackTrace();
+            fail("Should not have thrown an error.");
+        }
+
+        assertNotNull(json);
+        assertEquals(json, jsonResult);
+    }
+
+    @Test
+    public void hexToJsonNullReturnValueShouldThrowWhenDefaultsToInvalidAction() {
+        String hex = "000000000090b1ca";
+        String returnValueType = null;
+        String json = null;
+        Boolean errorThrown = false;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject("contract", "invalid", returnValueType, RETURN_VALUE_ABI);
+            serializationObject.setHex(hex);
+            abieos.deserialize(serializationObject);
+            json = serializationObject.getJson();
+        } catch (DeserializeError err) {
+            err.printStackTrace();
+            errorThrown = true;
+            assertEquals("one.block.eosiojava.error.serializationProvider.DeserializeError: Unable to find type for action invalid. contract \"contract\" does not have action \"invalid\"", err.getMessage());
+        }
+
+        assertNull(json);
+        assertTrue(errorThrown);
     }
 
     @Test
