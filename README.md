@@ -67,26 +67,37 @@ Now ABIEOS Serialization Provider is ready for use within EOSIO SDK for Java acc
 If you wish to use ABIEOS Serialization Provider directly, its public methods can be called like this:
 
 ```java
-try {
-    AbiEos abieos = new AbiEosSerializationProviderImpl()
-} catch (SerializationProviderError serializationProviderError) {
-    serializationProviderError.printStackTrace();
-}
+/**
+ * Some json to serialize
+ * You must include all required transaction fields when using serializeTransaction()
+ */
+String json = "{\"expiration\":\"2019-02-12T20:35:38.000\",\"ref_block_num\":60851,\"ref_block_prefix\":1743894440,\"max_net_usage_words\":0,\"max_cpu_usage_ms\":0,\"delay_sec\":0,\"context_free_actions\":[],\"actions\":[{\"account\":\"eosio.assert\",\"name\":\"require\",\"authorization\":[],\"data\":\"CBDD956F52ACD910C3C958136D72F8560D1846BC7CF3157F5FBFB72D3001DE4597F4A1FDBECDA6D59C96A43009FC5E5D7B8F639B1269C77CEC718460DCC19CB30100A6823403EA3055000000572D3CCDCD0143864D5AF0FE294D44D19C612036CBE8C098414C4A12A5A7BB0BFE7DB1556248\"},{\"account\":\"eosio.token\",\"name\":\"transfer\",\"authorization\":[{\"actor\":\"cryptkeeper\",\"permission\":\"active\"}],\"data\":\"00AEAA4AC15CFD4500000060D234CD3DA06806000000000004454F53000000001A746865206772617373686F70706572206C696573206865617679\"}],\"transaction_extensions\":[]}";
+/**
+ * Some hex data to deserialize
+ * You must have a valid hex representation of a full transaction when using deserializeTransaction()
+ */
+String hex = "1A2E635CB3EDA8B7F167000000000290AFC2D800EA3055000000405DA7ADBA0072CBDD956F52ACD910C3C958136D72F8560D1846BC7CF3157F5FBFB72D3001DE4597F4A1FDBECDA6D59C96A43009FC5E5D7B8F639B1269C77CEC718460DCC19CB30100A6823403EA3055000000572D3CCDCD0143864D5AF0FE294D44D19C612036CBE8C098414C4A12A5A7BB0BFE7DB155624800A6823403EA3055000000572D3CCDCD0100AEAA4AC15CFD4500000000A8ED32323B00AEAA4AC15CFD4500000060D234CD3DA06806000000000004454F53000000001A746865206772617373686F70706572206C69657320686561767900";
 
-String hex = "1686755CA99DE8E73E1200" // some binary data
-String json = "{"name": "John"}" // some JSON
+String serializeTransactionResult = null;
+String deserializeTransactionResult = null;
 
 try {
-    String jsonToBinaryTransaction = abieos.serializeTransaction(json)
+    serializeTransactionResult = abieos.serializeTransaction(json);
 } catch (SerializeTransactionError err) {
     err.printStackTrace();
 }
 
 try {
-    String binaryToJsonTransaction = abieos.deserializeTransaction(hex)
+    deserializeTransactionResult = abieos.deserializeTransaction(hex);
 } catch (DeserializeTransactionError err) {
     err.printStackTrace();
 }
+
+assertNotNull(serializeTransactionResult);
+assertEquals(hex, serializeTransactionResult);
+
+assertNotNull(deserializeTransactionResult);
+assertEquals(json, deserializeTransactionResult);
 ```
 
 ## Android Example App
@@ -95,7 +106,7 @@ If you'd like to see EOSIO SDK for Java: Android ABIEOS Serialization Provider i
 
 ## Releases
 
-6/9/20
+6/23/20
 
 Version 0.1.2 The version includes support for newer ABI versions.
 
