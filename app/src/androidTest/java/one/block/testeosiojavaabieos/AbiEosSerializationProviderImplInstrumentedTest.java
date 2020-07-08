@@ -185,6 +185,27 @@ public class AbiEosSerializationProviderImplInstrumentedTest {
     }
 
     @Test
+    public void jsonToHexReturnValueShouldBeAbleToSpecifyEmptyContractAndActionName() {
+        String json = "10";
+        String returnValueType = "uint32";
+        String hexResult = "0A000000";
+        String hex = null;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject("", "", returnValueType, RETURN_VALUE_ABI);
+            serializationObject.setJson(json);
+            abieos.serialize(serializationObject);
+            hex = serializationObject.getHex();
+        } catch (SerializeError err) {
+            err.printStackTrace();
+            fail("Should not have thrown an error.");
+        }
+
+        assertNotNull(hex);
+        assertEquals(hex, hexResult);
+    }
+
+    @Test
     public void jsonToHexReturnValueShouldBeAbleToSpecifyNullContractAndActionName() {
         String json = "10";
         String returnValueType = "uint32";
@@ -278,6 +299,27 @@ public class AbiEosSerializationProviderImplInstrumentedTest {
 
         try {
             AbiEosSerializationObject serializationObject = new AbiEosSerializationObject("contract", "retval.null", returnValueType, RETURN_VALUE_ABI);
+            serializationObject.setHex(hex);
+            abieos.deserialize(serializationObject);
+            json = serializationObject.getJson();
+        } catch (DeserializeError err) {
+            err.printStackTrace();
+            fail("Should not have thrown an error.");
+        }
+
+        assertNotNull(json);
+        assertEquals(json, jsonResult);
+    }
+
+    @Test
+    public void hexToJsonReturnValueShouldBeAbleToSpecifyEmptyContractAndActionName() {
+        String hex = "0A000000";
+        String returnValueType = "uint32";
+        String jsonResult = "10";
+        String json = null;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject("", "", returnValueType, RETURN_VALUE_ABI);
             serializationObject.setHex(hex);
             abieos.deserialize(serializationObject);
             json = serializationObject.getJson();
