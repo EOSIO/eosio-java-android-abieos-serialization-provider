@@ -6,6 +6,7 @@ import one.block.eosiojava.error.serializationProvider.DeserializeError;
 import one.block.eosiojava.error.serializationProvider.DeserializeTransactionError;
 import one.block.eosiojava.error.serializationProvider.SerializationProviderError;
 import one.block.eosiojava.error.serializationProvider.SerializeAbiError;
+import one.block.eosiojava.error.serializationProvider.SerializeError;
 import one.block.eosiojava.error.serializationProvider.SerializeTransactionError;
 import one.block.eosiojava.models.AbiEosSerializationObject;
 import one.block.eosiojavaabieosserializationprovider.AbiEosSerializationProviderImpl;
@@ -26,6 +27,8 @@ import static org.junit.Assert.*;
 public class AbiEosSerializationProviderImplInstrumentedTest {
 
     private static AbiEosSerializationProviderImpl abieos;
+    private static final String RETURN_VALUE_ABI = "{\"version\":\"eosio::abi/1.2\",\"types\":[],\"structs\":[{\"name\":\"retval.complex\",\"base\":\"\",\"fields\":[{\"name\":\"user\",\"type\":\"name\"}]},{\"name\":\"retval.simple\",\"base\":\"\",\"fields\":[{\"name\":\"user\",\"type\":\"name\"}]},{\"name\":\"retval.null\",\"base\":\"\",\"fields\":[{\"name\":\"user\",\"type\":\"name\"}]},{\"name\":\"returnValue\",\"base\":\"\",\"fields\":[{\"name\":\"id\",\"type\":\"uint32\"},{\"name\":\"name\",\"type\":\"name\"}]}],\"actions\":[{\"name\":\"retval.complex\",\"type\":\"retval.complex\",\"ricardian_contract\":\"\"},{\"name\":\"retval.simple\",\"type\":\"retval.simple\",\"ricardian_contract\":\"\"},{\"name\":\"retval.null\",\"type\":\"retval.null\",\"ricardian_contract\":\"\"}],\"tables\":[],\"ricardian_clauses\":[],\"error_messages\":[],\"abi_extensions\":[],\"variants\":[]}";
+    private static final String QUERY_IT_ABI = "{\"version\":\"eosio::abi/1.1\",\"types\":[{\"new_type_name\":\"any_array\",\"type\":\"anyvar[]\"},{\"new_type_name\":\"any_object\",\"type\":\"field[]\"}],\"structs\":[{\"name\":\"null_t\",\"base\":\"\",\"fields\":[]},{\"name\":\"field\",\"base\":\"\",\"fields\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"value\",\"type\":\"anyvar\"}]},{\"name\":\"query\",\"base\":\"\",\"fields\":[{\"name\":\"method\",\"type\":\"string\"},{\"name\":\"arg\",\"type\":\"anyvar?\"},{\"name\":\"filter\",\"type\":\"query[]\"}]}],\"variants\":[{\"name\":\"anyvar\",\"types\":[\"null_t\",\"int64\",\"uint64\",\"int32\",\"uint32\",\"int16\",\"uint16\",\"int8\",\"uint8\",\"time_point\",\"checksum256\",\"float64\",\"string\",\"any_object\",\"any_array\",\"bytes\",\"symbol\",\"symbol_code\",\"asset\"]}]}";
 
     @BeforeClass
     public static void startSetup() {
@@ -120,6 +123,260 @@ public class AbiEosSerializationProviderImplInstrumentedTest {
     }
 
     @Test
+    public void jsonToHexSimpleReturnValue() {
+        String json = "10";
+        String returnValueType = "uint32";
+        String hexResult = "0A000000";
+        String hex = null;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject("contract", "retval.simple", returnValueType, RETURN_VALUE_ABI);
+            serializationObject.setJson(json);
+            abieos.serialize(serializationObject);
+            hex = serializationObject.getHex();
+        } catch (SerializeError err) {
+            err.printStackTrace();
+            fail("Should not have thrown an error.");
+        }
+
+        assertNotNull(hex);
+        assertEquals(hex, hexResult);
+    }
+
+    @Test
+    public void jsonToHexComplexReturnValue() {
+        String json = "{\"id\":1234,\"name\":\"test\"}";
+        String returnValueType = "returnValue";
+        String hexResult = "D2040000000000000090B1CA";
+        String hex = null;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject("contract", "retval.complex", returnValueType, RETURN_VALUE_ABI);
+            serializationObject.setJson(json);
+            abieos.serialize(serializationObject);
+            hex = serializationObject.getHex();
+        } catch (SerializeError err) {
+            err.printStackTrace();
+            fail("Should not have thrown an error.");
+        }
+
+        assertNotNull(hex);
+        assertEquals(hex, hexResult);
+    }
+
+    @Test
+    public void jsonToHexNullReturnValueShouldDefaultToActionData() {
+        String json = "{\"user\":\"test\"}";
+        String returnValueType = null;
+        String hexResult = "000000000090B1CA";
+        String hex = null;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject("contract", "retval.null", returnValueType, RETURN_VALUE_ABI);
+            serializationObject.setJson(json);
+            abieos.serialize(serializationObject);
+            hex = serializationObject.getHex();
+        } catch (SerializeError err) {
+            err.printStackTrace();
+            fail("Should not have thrown an error.");
+        }
+
+        assertNotNull(hex);
+        assertEquals(hex, hexResult);
+    }
+
+    @Test
+    public void jsonToHexReturnValueShouldBeAbleToSpecifyEmptyContractAndActionName() {
+        String json = "10";
+        String returnValueType = "uint32";
+        String hexResult = "0A000000";
+        String hex = null;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject("", "", returnValueType, RETURN_VALUE_ABI);
+            serializationObject.setJson(json);
+            abieos.serialize(serializationObject);
+            hex = serializationObject.getHex();
+        } catch (SerializeError err) {
+            err.printStackTrace();
+            fail("Should not have thrown an error.");
+        }
+
+        assertNotNull(hex);
+        assertEquals(hex, hexResult);
+    }
+
+    @Test
+    public void jsonToHexReturnValueShouldBeAbleToSpecifyNullContractAndActionName() {
+        String json = "10";
+        String returnValueType = "uint32";
+        String hexResult = "0A000000";
+        String hex = null;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null, null, returnValueType, RETURN_VALUE_ABI);
+            serializationObject.setJson(json);
+            abieos.serialize(serializationObject);
+            hex = serializationObject.getHex();
+        } catch (SerializeError err) {
+            err.printStackTrace();
+            fail("Should not have thrown an error.");
+        }
+
+        assertNotNull(hex);
+        assertEquals(hex, hexResult);
+    }
+
+    @Test
+    public void jsonToHexNullReturnValueShouldThrowWhenDefaultsToInvalidAction() {
+        String json = "{\"user\":\"test\"}";
+        String returnValueType = null;
+        String hex = null;
+        Boolean errorThrown = false;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject("contract", "invalid", returnValueType, RETURN_VALUE_ABI);
+            serializationObject.setJson(json);
+            abieos.serialize(serializationObject);
+            hex = serializationObject.getHex();
+        } catch (SerializeError err) {
+            err.printStackTrace();
+            errorThrown = true;
+            assertEquals("one.block.eosiojava.error.serializationProvider.SerializeError: Unable to find type for action invalid. contract \"contract\" does not have action \"invalid\"", err.getMessage());
+        }
+
+        assertNull(hex);
+        assertTrue(errorThrown);
+    }
+
+    @Test
+    public void hexToJsonSimpleReturnValue() {
+        String hex = "0A000000";
+        String returnValueType = "uint32";
+        String jsonResult = "10";
+        String json = null;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject("contract", "retval.simple", returnValueType, RETURN_VALUE_ABI);
+            serializationObject.setHex(hex);
+            abieos.deserialize(serializationObject);
+            json = serializationObject.getJson();
+        } catch (DeserializeError err) {
+            err.printStackTrace();
+            fail("Should not have thrown an error.");
+        }
+
+        assertNotNull(json);
+        assertEquals(json, jsonResult);
+    }
+
+    @Test
+    public void hexToJsonComplexReturnValue() {
+        String hex = "D2040000000000000090B1CA";
+        String returnValueType = "returnValue";
+        String jsonResult = "{\"id\":1234,\"name\":\"test\"}";
+        String json = null;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject("contract", "retval.complex", returnValueType, RETURN_VALUE_ABI);
+            serializationObject.setHex(hex);
+            abieos.deserialize(serializationObject);
+            json = serializationObject.getJson();
+        } catch (DeserializeError err) {
+            err.printStackTrace();
+            fail("Should not have thrown an error.");
+        }
+
+        assertNotNull(json);
+        assertEquals(json, jsonResult);
+    }
+
+    @Test
+    public void hexToJsonNullReturnValueShouldDefaultToActionData() {
+        String hex = "000000000090B1CA";
+        String returnValueType = null;
+        String jsonResult = "{\"user\":\"test\"}";
+        String json = null;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject("contract", "retval.null", returnValueType, RETURN_VALUE_ABI);
+            serializationObject.setHex(hex);
+            abieos.deserialize(serializationObject);
+            json = serializationObject.getJson();
+        } catch (DeserializeError err) {
+            err.printStackTrace();
+            fail("Should not have thrown an error.");
+        }
+
+        assertNotNull(json);
+        assertEquals(json, jsonResult);
+    }
+
+    @Test
+    public void hexToJsonReturnValueShouldBeAbleToSpecifyEmptyContractAndActionName() {
+        String hex = "0A000000";
+        String returnValueType = "uint32";
+        String jsonResult = "10";
+        String json = null;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject("", "", returnValueType, RETURN_VALUE_ABI);
+            serializationObject.setHex(hex);
+            abieos.deserialize(serializationObject);
+            json = serializationObject.getJson();
+        } catch (DeserializeError err) {
+            err.printStackTrace();
+            fail("Should not have thrown an error.");
+        }
+
+        assertNotNull(json);
+        assertEquals(json, jsonResult);
+    }
+
+    @Test
+    public void hexToJsonReturnValueShouldBeAbleToSpecifyNullContractAndActionName() {
+        String hex = "0A000000";
+        String returnValueType = "uint32";
+        String jsonResult = "10";
+        String json = null;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null, null, returnValueType, RETURN_VALUE_ABI);
+            serializationObject.setHex(hex);
+            abieos.deserialize(serializationObject);
+            json = serializationObject.getJson();
+        } catch (DeserializeError err) {
+            err.printStackTrace();
+            fail("Should not have thrown an error.");
+        }
+
+        assertNotNull(json);
+        assertEquals(json, jsonResult);
+    }
+
+    @Test
+    public void hexToJsonNullReturnValueShouldThrowWhenDefaultsToInvalidAction() {
+        String hex = "000000000090B1CA";
+        String returnValueType = null;
+        String json = null;
+        Boolean errorThrown = false;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject("contract", "invalid", returnValueType, RETURN_VALUE_ABI);
+            serializationObject.setHex(hex);
+            abieos.deserialize(serializationObject);
+            json = serializationObject.getJson();
+        } catch (DeserializeError err) {
+            err.printStackTrace();
+            errorThrown = true;
+            assertEquals("one.block.eosiojava.error.serializationProvider.DeserializeError: Unable to find type for action invalid. contract \"contract\" does not have action \"invalid\"", err.getMessage());
+        }
+
+        assertNull(json);
+        assertTrue(errorThrown);
+    }
+
+    @Test
     public void jsonToHexTransaction2() {
         String json = "{\n" +
                 "\"expiration\" : \"2019-02-12T20:35:38.000\",\n" +
@@ -175,5 +432,134 @@ public class AbiEosSerializationProviderImplInstrumentedTest {
         } catch (SerializationProviderError ace) {
 
         }
+    }
+
+    //String json = "[\"string\", {\"timestamp\":\"2020-07-13T17:56:56.500\",\"producer\":\"eosio\",\"confirmed\":0,\"previous\":\"000000091e163612432a29708c08bc81e0b3abeeed4ea6049fb9fa95e4c3d99c\",\"transaction_mroot\":\"0000000000000000000000000000000000000000000000000000000000000000\",\"action_mroot\":\"2f7f5ed532774ca0d79a7ca002bd71941682a8df4d9d73dea58b11d331daf826\",\"schedule_version\":0,\"new_producers\":null,\"producer_signature\":\"SIG_K1_KWFnwfSphW8Cc2WpuSoWzXHe2X3KEUMoJ4M997pF4P2X7W6Yey4JwumqUZ4EVqLput8WA9Q7hFKAaXj71E4n4ZwJNmGxm7\",\"transactions\":[],\"id\":\"0000000addb72ad113792fb051df2c66f474cf8e7a5ee7b65671ec66924dad89\",\"block_num\":10,\"ref_block_prefix\":2955901203}]";
+    //String json = "{\"data\":{\"getBlock\":{\"blocknum\":10,\"body\":\"{\\n  \\\"timestamp\\\": \\\"2020-07-13T17:56:56.500\\\",\\n  \\\"producer\\\": \\\"eosio\\\",\\n  \\\"confirmed\\\": 0,\\n  \\\"previous\\\": \\\"000000091e163612432a29708c08bc81e0b3abeeed4ea6049fb9fa95e4c3d99c\\\",\\n  \\\"transaction_mroot\\\": \\\"0000000000000000000000000000000000000000000000000000000000000000\\\",\\n  \\\"action_mroot\\\": \\\"2f7f5ed532774ca0d79a7ca002bd71941682a8df4d9d73dea58b11d331daf826\\\",\\n  \\\"schedule_version\\\": 0,\\n  \\\"new_producers\\\": null,\\n  \\\"producer_signature\\\": \\\"SIG_K1_KWFnwfSphW8Cc2WpuSoWzXHe2X3KEUMoJ4M997pF4P2X7W6Yey4JwumqUZ4EVqLput8WA9Q7hFKAaXj71E4n4ZwJNmGxm7\\\",\\n  \\\"transactions\\\": [],\\n  \\\"id\\\": \\\"0000000addb72ad113792fb051df2c66f474cf8e7a5ee7b65671ec66924dad89\\\",\\n  \\\"block_num\\\": 10,\\n  \\\"ref_block_prefix\\\": 2955901203\\n}\"}}}";
+
+    @Test
+    public void testQueryItAnyVarSerialization() {
+        String json = "[\"string\",\"test\"]";
+        String returnValueType = "anyvar";
+        String hexResult = "0C0474657374";
+        String hex = null;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null, null, returnValueType, QUERY_IT_ABI);
+            serializationObject.setJson(json);
+            abieos.serialize(serializationObject);
+            hex = serializationObject.getHex();
+        } catch (SerializeError err) {
+            err.printStackTrace();
+            fail("Should not have thrown an error.");
+        }
+
+        assertNotNull(hex);
+        assertEquals(hex, hexResult);
+    }
+
+    @Test
+    public void testQueryItAnyArraySerialization() {
+        String json = "[[\"string\",\"test\"]]";
+        String returnValueType = "any_array";
+        String hexResult = "010C0474657374";
+        String hex = null;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null, null, returnValueType, QUERY_IT_ABI);
+            serializationObject.setJson(json);
+            abieos.serialize(serializationObject);
+            hex = serializationObject.getHex();
+        } catch (SerializeError err) {
+            err.printStackTrace();
+            fail("Should not have thrown an error.");
+        }
+
+        assertNotNull(hex);
+        assertEquals(hex, hexResult);
+    }
+
+    @Test
+    public void testQueryItAnyObjectSerialization() {
+        String json = "[{\"name\": \"something\", \"value\": [\"string\", \"test\"]}]";
+        String returnValueType = "any_object";
+        String hexResult = "0109736F6D657468696E670C0474657374";
+        String hex = null;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null, null, returnValueType, QUERY_IT_ABI);
+            serializationObject.setJson(json);
+            abieos.serialize(serializationObject);
+            hex = serializationObject.getHex();
+        } catch (SerializeError err) {
+            err.printStackTrace();
+            fail("Should not have thrown an error.");
+        }
+
+        assertNotNull(hex);
+        assertEquals(hex, hexResult);
+    }
+
+    @Test
+    public void testQueryItAnyVarDeserialization() {
+        String hex = "0C0474657374";
+        String returnValueType = "anyvar";
+        String jsonResult = "[\"string\",\"test\"]";
+        String json = null;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null, null, returnValueType, QUERY_IT_ABI);
+            serializationObject.setHex(hex);
+            abieos.deserialize(serializationObject);
+            json = serializationObject.getJson();
+        } catch (DeserializeError err) {
+            err.printStackTrace();
+            fail("Should not have thrown an error.");
+        }
+
+        assertNotNull(json);
+        assertEquals(json, jsonResult);
+    }
+
+    @Test
+    public void testQueryItAnyArrayDeserialization() {
+        String hex = "010C0474657374";
+        String returnValueType = "any_array";
+        String jsonResult = "[[\"string\",\"test\"]]";
+        String json = null;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null, null, returnValueType, QUERY_IT_ABI);
+            serializationObject.setHex(hex);
+            abieos.deserialize(serializationObject);
+            json = serializationObject.getJson();
+        } catch (DeserializeError err) {
+            err.printStackTrace();
+            fail("Should not have thrown an error.");
+        }
+
+        assertNotNull(json);
+        assertEquals(json, jsonResult);
+    }
+
+    @Test
+    public void testQueryItAnyObjectDeserialization() {
+        String hex = "0109736F6D657468696E670C0474657374";
+        String returnValueType = "any_object";
+        String jsonResult = "[{\"name\":\"something\",\"value\":[\"string\",\"test\"]}]";
+        String json = null;
+
+        try {
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null, null, returnValueType, QUERY_IT_ABI);
+            serializationObject.setHex(hex);
+            abieos.deserialize(serializationObject);
+            json = serializationObject.getJson();
+        } catch (DeserializeError err) {
+            err.printStackTrace();
+            fail("Should not have thrown an error.");
+        }
+
+        assertNotNull(json);
+        assertEquals(json, jsonResult);
     }
 }
