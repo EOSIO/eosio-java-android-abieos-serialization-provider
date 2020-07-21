@@ -2,12 +2,7 @@ apply plugin: 'java-library'
 //Remove 'com.jfrog.artifactory' plugin if you are not using Artifactory
 apply plugin: "com.jfrog.artifactory"
 apply plugin: 'maven-publish'
-
-externalNativeBuild {
-    cmake {
-        path "src/main/cpp/CMakeLists.txt"
-    }
-}
+apply plugin: 'cpp'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])

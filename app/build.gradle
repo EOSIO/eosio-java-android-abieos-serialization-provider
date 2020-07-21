@@ -27,7 +27,7 @@ android {
 
     externalNativeBuild {
         cmake {
-            path "src/main/cpp/CMakeLists.txt"
+            path "../eosiojavaabieos/src/main/cpp/CMakeLists.txt"
         }
     }
 
