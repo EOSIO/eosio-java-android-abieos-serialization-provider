@@ -1,7 +1,5 @@
 package one.block.eosiojavaabieosserializationprovider;
 
-import android.util.Log;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
@@ -25,7 +23,7 @@ public class JsonUtils {
             JSONObject json = getJsonFromMap(map);
             return json.toString();
         } catch (JSONException ex) {
-            Log.e("JsonUtils", "Error converting map to JSON.", ex);
+            //Log.e("JsonUtils", "Error converting map to JSON.", ex);
             return null;
         }
     }

@@ -4,7 +4,6 @@ import one.block.eosiojava.interfaces.ISerializationProvider;
 import one.block.eosiojava.models.AbiEosSerializationObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.util.Map;
@@ -355,7 +354,7 @@ public class AbiEosSerializationProviderImpl implements ISerializationProvider {
         if (jsonMap.containsKey(abi)) {
             abiString = jsonMap.get(abi);
         } else {
-            Log.e(TAG, "Error, no json in map for: " + abi);
+            //Log.e(TAG, "Error, no json in map for: " + abi);
             abiString = "";
         }
 
