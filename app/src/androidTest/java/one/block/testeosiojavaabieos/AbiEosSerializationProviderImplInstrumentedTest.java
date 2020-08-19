@@ -4,9 +4,11 @@ import androidx.test.runner.AndroidJUnit4;
 import one.block.eosiojava.error.serializationProvider.DeserializeAbiError;
 import one.block.eosiojava.error.serializationProvider.DeserializeError;
 import one.block.eosiojava.error.serializationProvider.DeserializeTransactionError;
+import one.block.eosiojava.error.serializationProvider.DeserializePackedTransactionError;
 import one.block.eosiojava.error.serializationProvider.SerializationProviderError;
 import one.block.eosiojava.error.serializationProvider.SerializeAbiError;
 import one.block.eosiojava.error.serializationProvider.SerializeTransactionError;
+import one.block.eosiojava.error.serializationProvider.SerializePackedTransactionError;
 import one.block.eosiojava.models.AbiEosSerializationObject;
 import one.block.eosiojavaabieosserializationprovider.AbiEosSerializationProviderImpl;
 
