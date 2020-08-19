@@ -83,8 +83,8 @@ public class AbiEosSerializationProviderImplInstrumentedTest {
 
     @Test
     public void hexToJsonAbiTransaction() {
-        String hex = "AE0D635CDCAC90A6DCFA000000000100A6823403EA3055000000572D3CCDCD0100AEAA4AC15CFD4500000000A8ED32323B00AEAA4AC15CFD4500000060D234CD3DA06806000000000004454F53000000001A746865206772617373686F70706572206C69657320686561767900";
-        String jsonResult = "{\"expiration\":\"2019-02-12T18:17:18.000\",\"ref_block_num\":44252,\"ref_block_prefix\":4208764560,\"max_net_usage_words\":0,\"max_cpu_usage_ms\":0,\"delay_sec\":0,\"context_free_actions\":[],\"actions\":[{\"account\":\"eosio.token\",\"name\":\"transfer\",\"authorization\":[{\"actor\":\"cryptkeeper\",\"permission\":\"active\"}],\"data\":\"00AEAA4AC15CFD4500000060D234CD3DA06806000000000004454F53000000001A746865206772617373686F70706572206C696573206865617679\"}],\"transaction_extensions\":[]}";
+        String hex = "8468635b7f379feeb95500000000010000000000ea305500409e9a2264b89a010000000000ea305500000000a8ed3232660000000000ea305500a6823403ea30550100000001000240cc0bf90a5656c8bb81f0eb86f49f89613c5cd988c018715d4646c6bd0ad3d8010000000100000001000240cc0bf90a5656c8bb81f0eb86f49f89613c5cd988c018715d4646c6bd0ad3d80100000000";
+        String jsonResult = "{\"expiration\":\"2018-08-02T20:24:36.000\",\"ref_block_num\":14207,\"ref_block_prefix\":1438248607,\"max_net_usage_words\":0,\"max_cpu_usage_ms\":0,\"delay_sec\":0,\"context_free_actions\":[],\"actions\":[{\"account\":\"eosio\",\"name\":\"newaccount\",\"authorization\":[{\"actor\":\"eosio\",\"permission\":\"active\"}],\"data\":\"0000000000EA305500A6823403EA30550100000001000240CC0BF90A5656C8BB81F0EB86F49F89613C5CD988C018715D4646C6BD0AD3D8010000000100000001000240CC0BF90A5656C8BB81F0EB86F49F89613C5CD988C018715D4646C6BD0AD3D801000000\"}],\"transaction_extensions\":[]}";
 
         String json = null;
 
@@ -164,6 +164,40 @@ public class AbiEosSerializationProviderImplInstrumentedTest {
 
         assertNotNull(hex);
         assertEquals(hex, hexResult);
+    }
+
+    @Test
+    public void jsonToHexPackedTransaction() {
+        String json = "{\"signatures\":[\"SIG_K1_K5PGhrkUBkThs8zdTD9mGUJZvxL4eU46UjfYJSEdZ9PXS2Cgv5jAk57yTx4xnrdSocQm6DDvTaEJZi5WLBsoZC4XYNS8b3\"],\"compression\":0,\"packed_context_free_data\":\"\",\"packed_trx\":\"D3029649D2042E160000000000000100A6823403EA3055000000572D3CCDCD01608C31C6187315D600000000A8ED323221608C31C6187315D6708C31C6187315D6010000000000000004535953000000000000\"}";
+        String hexResult = "01001F4D6C791D32E38CA1A0A5F3139B8D1D521B641FE2EE675311FCA4C755ACDFCA2D13FE4DEE9953D2504FCB4382EEACBCEF90E3E8034BDD32EBA11F1904419DF6AF000053D3029649D2042E160000000000000100A6823403EA3055000000572D3CCDCD01608C31C6187315D600000000A8ED323221608C31C6187315D6708C31C6187315D6010000000000000004535953000000000000";
+
+        String hex = null;
+
+        try {
+            hex = abieos.serializePackedTransaction(json);
+        } catch (SerializePackedTransactionError err) {
+            err.printStackTrace();
+        }
+
+        assertNotNull(hex);
+        assertEquals(hex, hexResult);
+    }
+
+    @Test
+    public void hexToJsonAbiPackedTransaction() {
+        String hex = "01001F4D6C791D32E38CA1A0A5F3139B8D1D521B641FE2EE675311FCA4C755ACDFCA2D13FE4DEE9953D2504FCB4382EEACBCEF90E3E8034BDD32EBA11F1904419DF6AF000053D3029649D2042E160000000000000100A6823403EA3055000000572D3CCDCD01608C31C6187315D600000000A8ED323221608C31C6187315D6708C31C6187315D6010000000000000004535953000000000000";
+        String jsonResult = "{\"signatures\":[\"SIG_K1_K5PGhrkUBkThs8zdTD9mGUJZvxL4eU46UjfYJSEdZ9PXS2Cgv5jAk57yTx4xnrdSocQm6DDvTaEJZi5WLBsoZC4XYNS8b3\"],\"compression\":0,\"packed_context_free_data\":\"\",\"packed_trx\":\"D3029649D2042E160000000000000100A6823403EA3055000000572D3CCDCD01608C31C6187315D600000000A8ED323221608C31C6187315D6708C31C6187315D6010000000000000004535953000000000000\"}";
+
+        String json = null;
+
+        try {
+            json = abieos.deserializePackedTransaction(hex);
+        } catch (DeserializePackedTransactionError err) {
+            err.printStackTrace();
+        }
+
+        assertNotNull(json);
+        assertEquals(json, jsonResult);
     }
 
     @Test
