@@ -221,6 +221,28 @@ public class AbiEosSerializationProviderImpl implements ISerializationProvider {
     }
 
     /**
+     * Convenience method to transform a serialized transaction (v0) JSON string to a hex string.
+     *
+     * @param json - JSON string representing the serialized transaction (v0) to serialize.
+     * @return - Serialized hex string representing the transaction JSON.
+     * @throws SerializePackedTransactionError - A serialization error is thrown if there are any exceptions during the
+     *      * conversion process.
+     */
+    @NotNull
+    public String serializePackedTransaction(String json) throws SerializePackedTransactionError {
+        try {
+            String abi = getAbiJsonString("packed.transaction.abi.json");
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null,
+                    "", "packed_transaction_v0", abi);
+            serializationObject.setJson(json);
+            serialize(serializationObject);
+            return serializationObject.getHex();
+        } catch (SerializationProviderError serializationProviderError) {
+            throw new SerializePackedTransactionError(serializationProviderError);
+        }
+    }
+
+    /**
      * Perform a deserialization process to convert a hex string to a JSON string given the parameters
      * provided in the input deserilizationObject.  The result will be placed in the json field of
      * the deserilizationObject and can be accessed with getJson().
@@ -323,6 +345,28 @@ public class AbiEosSerializationProviderImpl implements ISerializationProvider {
             return serializationObject.getJson();
         } catch (SerializationProviderError serializationProviderError) {
             throw new DeserializeAbiError(serializationProviderError);
+        }
+    }
+
+    /**
+     * Convenience method to transform a packed transaction (v0) hex string to a JSON string.
+     *
+     * @param hex - Hex string representing the packed transaction (v0) to deserialize.
+     * @return - Deserialized JSON string representing the transaction hex.
+     * @throws DeserializePackedTransactionError - A deserialization error is thrown if there are any exceptions during the
+     *      * conversion process.
+     */
+    @NotNull
+    public String deserializePackedTransaction(String hex) throws DeserializePackedTransactionError {
+        try {
+            String abi = getAbiJsonString("packed.transaction.abi.json");
+            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null,
+                    "", "packed_transaction_v0", abi);
+            serializationObject.setHex(hex);
+            deserialize(serializationObject);
+            return serializationObject.getJson();
+        } catch (SerializationProviderError serializationProviderError) {
+            throw new DeserializePackedTransactionError(serializationProviderError);
         }
     }
 
