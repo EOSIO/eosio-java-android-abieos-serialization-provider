@@ -2,6 +2,9 @@ package one.block.eosiojavaabieosserializationprovider;
 
 import one.block.eosiojava.interfaces.ISerializationProvider;
 import one.block.eosiojava.models.AbiEosSerializationObject;
+
+import org.bouncycastle.util.encoders.DecoderException;
+import org.bouncycastle.util.encoders.Hex;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import android.util.Log;
@@ -9,6 +12,7 @@ import android.util.Log;
 import java.nio.ByteBuffer;
 import java.util.Map;
 import one.block.eosiojava.error.serializationProvider.*;
+import one.block.eosiojava.utilities.ByteFormatter;
 
 /**
  * Implementation of ISerializationProvider based on a native C++ transformation process
@@ -32,6 +36,8 @@ public class AbiEosSerializationProviderImpl implements ISerializationProvider {
     public native boolean jsonToBin(ByteBuffer context, long contract, String type, String json, boolean reorderable);
     public native String hexToJson(ByteBuffer context, long contract, String type, String hex);
     public native String getTypeForAction(ByteBuffer context, long contract, long action);
+    public native boolean abiJsonToBin(ByteBuffer context, String json);
+    public native String abiBinToJson(ByteBuffer context, byte[] abiByteArray);
 
     private ByteBuffer context;
 
@@ -209,12 +215,19 @@ public class AbiEosSerializationProviderImpl implements ISerializationProvider {
     @NotNull
     public String serializeAbi(String json) throws SerializeAbiError {
         try {
-            String abi = getAbiJsonString("abi.abi.json");
-            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null,
-                    "", "abi_def", abi);
-            serializationObject.setJson(json);
-            serialize(serializationObject);
-            return serializationObject.getHex();
+            refreshContext();
+            boolean jsonToBinResult = abiJsonToBin(context, json);
+            if(!jsonToBinResult) {
+                String err = error();
+                String errMsg = String
+                        .format("Unable to pack abi json to bin. %s", err == null ? "" : err);
+                throw new SerializeError(errMsg);
+            }
+            String hex = getBinHex(context);
+            if (hex == null) {
+                throw new SerializeError("Unable to convert binary to hex.");
+            }
+            return hex;
         } catch (SerializationProviderError serializationProviderError) {
             throw new SerializeAbiError(serializationProviderError);
         }
@@ -315,14 +328,20 @@ public class AbiEosSerializationProviderImpl implements ISerializationProvider {
     @NotNull
     public String deserializeAbi(String hex) throws DeserializeAbiError {
         try {
-            String abi = getAbiJsonString("abi.abi.json");
-            AbiEosSerializationObject serializationObject = new AbiEosSerializationObject(null,
-                    "", "abi_def", abi);
-            serializationObject.setHex(hex);
-            deserialize(serializationObject);
-            return serializationObject.getJson();
+            refreshContext();
+            byte[] hexData = Hex.decode(hex);
+            String jsonStr = abiBinToJson(context, hexData);
+            if(jsonStr == null) {
+                String err = error();
+                String errMsg = String
+                        .format("Unable to unpack abi hex to json. %s", err == null ? "" : err);
+                throw new DeserializeError(errMsg);
+            }
+            return jsonStr;
         } catch (SerializationProviderError serializationProviderError) {
             throw new DeserializeAbiError(serializationProviderError);
+        } catch (DecoderException decoderError) {
+            throw new DeserializeAbiError(decoderError);
         }
     }
 
