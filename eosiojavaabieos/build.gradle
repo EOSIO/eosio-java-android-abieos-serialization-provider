@@ -51,7 +51,7 @@ dependencies {
 
 def libraryGroupId = 'one.block'
 def libraryArtifactId = 'eosiojavaandroidabieosserializationprovider'
-def libraryVersion = '0.1.2'
+def libraryVersion = '0.1.3-eosio2.1'
 
 task androidJavadocs(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs

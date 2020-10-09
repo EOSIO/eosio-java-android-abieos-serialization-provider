@@ -154,6 +154,41 @@ extern "C"
         return typeStr == nullptr ? nullptr : env->NewStringUTF(typeStr);
     }
 
+    JNIEXPORT jboolean JNICALL
+    abiJsonToBin(JNIEnv *env, jobject /* this */,
+        jobject context_direct_byte_buffer,
+        jstring json) {
+
+        abieos_context* context = getContext(env, context_direct_byte_buffer);
+        jboolean isJsonCopy;
+        const char *jsonStr = (json == nullptr) ? nullptr : env->GetStringUTFChars(json, &isJsonCopy);
+        abieos_bool ret = 0;
+        ret = abieos_abi_json_to_bin(context, jsonStr);
+        if (jsonStr != nullptr)
+            env->ReleaseStringUTFChars(json, jsonStr);
+        return (jboolean)ret;
+    }
+
+    JNIEXPORT jstring JNICALL
+    abiBinToJson(JNIEnv *env, jobject /* this */,
+                 jobject context_direct_byte_buffer,
+                 jbyteArray abi_byte_array) {
+        if (abi_byte_array == nullptr) {
+            return nullptr;
+        }
+        abieos_context *context = getContext(env, context_direct_byte_buffer);
+        jboolean isAbiDataCopy;
+        jbyte *bytes = env->GetByteArrayElements(abi_byte_array, &isAbiDataCopy);
+        const char *abiBytes = (const char *) bytes;
+        int len = env->GetArrayLength(abi_byte_array);
+        const char *jsonStr = abieos_abi_bin_to_json(context, abiBytes, len);
+        if (bytes != nullptr) {
+            env->ReleaseByteArrayElements(abi_byte_array, bytes, JNI_ABORT);
+        }
+        jstring returnJson = (jsonStr == nullptr) ? nullptr : env->NewStringUTF(jsonStr);
+        return returnJson;
+    }
+
     static JNINativeMethod method_table[] = {
             {"stringFromAbiEos", "()Ljava/lang/String;", (void *) stringFromAbiEos},
             {"create", "()Ljava/nio/ByteBuffer;", (void *) create},
@@ -167,7 +202,9 @@ extern "C"
             {"setAbi", "(Ljava/nio/ByteBuffer;JLjava/lang/String;)Z", (void *) setAbi},
             {"jsonToBin", "(Ljava/nio/ByteBuffer;JLjava/lang/String;Ljava/lang/String;Z)Z", (void *) jsonToBin},
             {"hexToJson", "(Ljava/nio/ByteBuffer;JLjava/lang/String;Ljava/lang/String;)Ljava/lang/String;", (void *) hexToJson},
-            {"getTypeForAction", "(Ljava/nio/ByteBuffer;JJ)Ljava/lang/String;", (void *) getTypeForAction }
+            {"getTypeForAction", "(Ljava/nio/ByteBuffer;JJ)Ljava/lang/String;", (void *) getTypeForAction },
+            {"abiJsonToBin", "(Ljava/nio/ByteBuffer;Ljava/lang/String;)Z", (void *) abiJsonToBin },
+            {"abiBinToJson", "(Ljava/nio/ByteBuffer;[B)Ljava/lang/String;", (void *) abiBinToJson }
     };
 
     JNIEXPORT jint JNICALL
