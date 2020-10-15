@@ -333,6 +333,34 @@ public class AbiEosJson {
                 "        }\n" +
                 "    ]\n" +
                 "}");
+
+        jsonMap.put("packed.transaction.abi.json", "{\n" +
+                "    \"version\": \"eosio::abi/1.0\",\n" +
+                "    \"structs\": [\n" +
+                "        {\n" +
+                "            \"name\": \"packed_transaction_v0\",\n" +
+                "            \"base\": \"\",\n" +
+                "            \"fields\": [\n" +
+                "                {\n" +
+                "                    \"name\": \"signatures\",\n" +
+                "                    \"type\": \"signature[]\"\n" +
+                "                },\n" +
+                "                {\n" +
+                "                    \"name\": \"compression\",\n" +
+                "                    \"type\": \"uint8\"\n" +
+                "                },\n" +
+                "                {\n" +
+                "                    \"name\": \"packed_context_free_data\",\n" +
+                "                    \"type\": \"bytes\"\n" +
+                "                },\n" +
+                "                {\n" +
+                "                    \"name\": \"packed_trx\",\n" +
+                "                    \"type\": \"bytes\"\n" +
+                "                }\n" +
+                "            ]\n" +
+                "        }\n" +
+                "    ]\n" +
+                "}");
         return Collections.unmodifiableMap(jsonMap);
     }
 }
