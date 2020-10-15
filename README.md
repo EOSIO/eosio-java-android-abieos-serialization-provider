@@ -41,8 +41,8 @@ ABIEOS Serialization Provider is intended to be used in conjunction with [EOSIO 
 To use ABIEOS Serialization Provider with EOSIO SDK for Java in your app, add the following modules to your `build.gradle`:
 
 ```groovy
-implementation 'one.block:eosiojava:0.1.2'
-implementation 'one.block:eosiojavaandroidabieosserializationprovider:0.1.1'
+implementation 'one.block:eosiojava:0.1.3'
+implementation 'one.block:eosiojavaandroidabieosserializationprovider:0.1.3'
 ```
 
 You must also add the following to the `android` section of your application's `build.gradle`:
@@ -95,9 +95,13 @@ If you'd like to see EOSIO SDK for Java: Android ABIEOS Serialization Provider i
 
 ## Releases
 
+10/15/20
+
+Version 0.1.3 This version adds support for newer Eosio 2.1 features.
+
 6/23/20
 
-Version 0.1.2 The version includes support for newer ABI versions.
+Version 0.1.2 This version includes support for newer ABI versions.
 
 2/27/20
 

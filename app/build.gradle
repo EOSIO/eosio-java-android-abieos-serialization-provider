@@ -33,6 +33,11 @@ android {
 
     testOptions{
         unitTests.includeAndroidResources = true
+        unitTests.all {
+            testLogging {
+                events 'passed', 'skipped', 'failed'
+            }
+        }
     }
 
     // Needed to get bitcoin-j to produce a valid apk for android.

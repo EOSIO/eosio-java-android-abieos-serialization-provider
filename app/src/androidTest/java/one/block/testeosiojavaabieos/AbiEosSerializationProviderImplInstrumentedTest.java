@@ -8,10 +8,12 @@ import com.google.gson.JsonParser;
 
 import one.block.eosiojava.error.serializationProvider.DeserializeAbiError;
 import one.block.eosiojava.error.serializationProvider.DeserializeError;
+import one.block.eosiojava.error.serializationProvider.DeserializePackedTransactionError;
 import one.block.eosiojava.error.serializationProvider.DeserializeTransactionError;
 import one.block.eosiojava.error.serializationProvider.SerializationProviderError;
 import one.block.eosiojava.error.serializationProvider.SerializeAbiError;
 import one.block.eosiojava.error.serializationProvider.SerializeError;
+import one.block.eosiojava.error.serializationProvider.SerializePackedTransactionError;
 import one.block.eosiojava.error.serializationProvider.SerializeTransactionError;
 import one.block.eosiojava.models.AbiEosSerializationObject;
 import one.block.eosiojavaabieosserializationprovider.AbiEosSerializationProviderImpl;
@@ -472,6 +474,40 @@ public class AbiEosSerializationProviderImplInstrumentedTest {
         } catch (SerializationProviderError ace) {
 
         }
+    }
+
+    @Test
+    public void jsonToHexPackedTransaction() {
+        String json = "{\"signatures\":[\"SIG_K1_K5PGhrkUBkThs8zdTD9mGUJZvxL4eU46UjfYJSEdZ9PXS2Cgv5jAk57yTx4xnrdSocQm6DDvTaEJZi5WLBsoZC4XYNS8b3\"],\"compression\":0,\"packed_context_free_data\":\"\",\"packed_trx\":\"D3029649D2042E160000000000000100A6823403EA3055000000572D3CCDCD01608C31C6187315D600000000A8ED323221608C31C6187315D6708C31C6187315D6010000000000000004535953000000000000\"}";
+        String hexResult = "01001F4D6C791D32E38CA1A0A5F3139B8D1D521B641FE2EE675311FCA4C755ACDFCA2D13FE4DEE9953D2504FCB4382EEACBCEF90E3E8034BDD32EBA11F1904419DF6AF000053D3029649D2042E160000000000000100A6823403EA3055000000572D3CCDCD01608C31C6187315D600000000A8ED323221608C31C6187315D6708C31C6187315D6010000000000000004535953000000000000";
+
+        String hex = null;
+
+        try {
+            hex = abieos.serializePackedTransaction(json);
+        } catch (SerializePackedTransactionError err) {
+            err.printStackTrace();
+        }
+
+        assertNotNull(hex);
+        assertEquals(hex, hexResult);
+    }
+
+    @Test
+    public void hexToJsonAbiPackedTransaction() {
+        String hex = "01001F4D6C791D32E38CA1A0A5F3139B8D1D521B641FE2EE675311FCA4C755ACDFCA2D13FE4DEE9953D2504FCB4382EEACBCEF90E3E8034BDD32EBA11F1904419DF6AF000053D3029649D2042E160000000000000100A6823403EA3055000000572D3CCDCD01608C31C6187315D600000000A8ED323221608C31C6187315D6708C31C6187315D6010000000000000004535953000000000000";
+        String jsonResult = "{\"signatures\":[\"SIG_K1_K5PGhrkUBkThs8zdTD9mGUJZvxL4eU46UjfYJSEdZ9PXS2Cgv5jAk57yTx4xnrdSocQm6DDvTaEJZi5WLBsoZC4XYNS8b3\"],\"compression\":0,\"packed_context_free_data\":\"\",\"packed_trx\":\"D3029649D2042E160000000000000100A6823403EA3055000000572D3CCDCD01608C31C6187315D600000000A8ED323221608C31C6187315D6708C31C6187315D6010000000000000004535953000000000000\"}";
+
+        String json = null;
+
+        try {
+            json = abieos.deserializePackedTransaction(hex);
+        } catch (DeserializePackedTransactionError err) {
+            err.printStackTrace();
+        }
+
+        assertNotNull(json);
+        assertEquals(json, jsonResult);
     }
 
     // Direct comparison of the JSON strings is fragile.  This compares the expected JSON to a result by checking
