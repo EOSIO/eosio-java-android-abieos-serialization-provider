@@ -1,5 +1,5 @@
 ![Java Logo](img/java-logo.png) <img src="img/Android_Robot.png" width="100">
-# EOSIO SDK for Java: Android ABIEOS Serialization Provider ![EOSIO Alpha](https://img.shields.io/badge/EOSIO-Alpha-blue.svg)
+# EOSIO SDK for Java: Android ABIEOS Serialization Provider
 
 [![Software License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](./LICENSE)
 ![Language Java](https://img.shields.io/badge/Language-C%2B%2B%2FJava-yellow.svg)
@@ -32,13 +32,17 @@ Serialization providers are responsible for ABI-driven transaction and action se
 * Gradle Plugin 3.3.0+
 * For Android, Android 6 (Marshmallow)+
 
-This project relies on platform functionality and libraries only present in Android 6+ and the Android NDK. Therefore, any project depending on ABIEOS Serialization Provider with [EOSIO SDK for Java](https://github.com/EOSIO/eosio-java) **must be an Android 6+ project**. If you need support for ABIEOS serialization on server side Java, please see the [Java ABIEOS Serialization Provider](https://github.com/EOSIO/eosio-java-abieos-serialization-provider) project. Other serialization providers, however, can be created to support earlier Android versions or other platforms. If your project requires earlier Android version or alternate platform support, or if you'd like to create a serialization provider and have questions, please reach out to us by [logging an issue](/../../issues/new).
+This project relies on platform functionality and libraries only present in Android 6+ and the Android NDK. Therefore, any project depending on Android ABIEOS Serialization Provider with [EOSIO SDK for Java](https://github.com/EOSIO/eosio-java) **must be an Android 6+ project**.
+
+If you need support for ABIEOS serialization on server side Java, please see the [Java ABIEOS Serialization Provider](https://github.com/EOSIO/eosio-java-abieos-serialization-provider) project.
+
+Other serialization providers can be created to support earlier Android versions or other platforms. If your project requires earlier Android version or alternate platform support, or if you'd like to create a serialization provider and have questions, please reach out to us by [logging an issue](/../../issues/new).
 
 ## Installation
 
-ABIEOS Serialization Provider is intended to be used in conjunction with [EOSIO SDK for Java](https://github.com/EOSIO/eosio-java) as a provider plugin.
+Android ABIEOS Serialization Provider is intended to be used in conjunction with [EOSIO SDK for Java](https://github.com/EOSIO/eosio-java) as a provider plugin.
 
-To use ABIEOS Serialization Provider with EOSIO SDK for Java in your app, add the following modules to your `build.gradle`:
+To use Android ABIEOS Serialization Provider with EOSIO SDK for Java in your app, add the following modules to your `build.gradle`:
 
 ```groovy
 implementation 'one.block:eosiojava:1.0.0'
@@ -56,15 +60,15 @@ packagingOptions {
 }
 ```
 
-The `build.gradle` files for the project currently include configurations for publishing the project to Artifactory.  These should be removed if you are not planning to use Artifactory or you will encounter build errors.  To do so, make the changes marked by comments throughout the files.
+The `build.gradle` files for the project currently include configurations for publishing the project to Artifactory. These should be removed if you are not planning to use Artifactory or you will encounter build errors. To do so, make the changes marked by comments throughout the files.
 
 Then refresh your gradle project.
 
-Now ABIEOS Serialization Provider is ready for use within EOSIO SDK for Java according to the [EOSIO SDK for Java Basic Usage instructions](https://github.com/EOSIO/eosio-java/tree/master#basic-usage).
+Now Android ABIEOS Serialization Provider is ready for use within EOSIO SDK for Java according to the [EOSIO SDK for Java Basic Usage instructions](https://github.com/EOSIO/eosio-java/tree/master#basic-usage).
 
 ## Direct Usage
 
-If you wish to use ABIEOS Serialization Provider directly, its public methods can be called like this:
+If you wish to use Android ABIEOS Serialization Provider directly, its public methods can be called like this:
 
 ```java
 try {
@@ -89,7 +93,7 @@ try {
 }
 ```
 
-You should explicitly destroy the provider's context (i.e. in a finally block), or you could run into a crash when multithreading, per this call:
+You should explicitly destroy the provider's context (_i.e._, in a finally block), or you could run into a crash when multithreading, per this call:
 
 `abieos.destroyContext();`
 
@@ -99,17 +103,9 @@ If you'd like to see EOSIO SDK for Java: Android ABIEOS Serialization Provider i
 
 ## Releases
 
-10/15/20
-
-Version 0.1.3 This version adds support for newer Eosio 2.1 features.
-
-6/23/20
-
-Version 0.1.2 This version includes support for newer ABI versions.
-
-2/27/20
-
-Version 0.1.1 The version consumes the new eosio-java library version 0.1.2.
+- 10/15/20: Version 0.1.3 This version adds support for newer Eosio 2.1 features.
+- 6/23/20: Version 0.1.2 This version includes support for newer ABI versions.
+- 2/27/20: Version 0.1.1 The version consumes the new eosio-java library version 0.1.2.
 
 ## Want to help?
 
