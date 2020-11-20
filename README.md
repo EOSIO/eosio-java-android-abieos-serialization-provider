@@ -32,7 +32,7 @@ Serialization providers are responsible for ABI-driven transaction and action se
 * Gradle Plugin 3.3.0+
 * For Android, Android 6 (Marshmallow)+
 
-This project relies on platform functionality and libraries only present in Android 6+ and the Android NDK. Therefore, any project depending on ABIEOS Serialization Provider with [EOSIO SDK for Java](https://github.com/EOSIO/eosio-java) **must be an Android 6+ project**. Other serialization providers, however, can be created to support earlier Android versions or other platforms. If your project requires earlier Android version or alternate platform support, or if you'd like to create a serialization provider and have questions, please reach out to us by [logging an issue](/../../issues/new).
+This project relies on platform functionality and libraries only present in Android 6+ and the Android NDK. Therefore, any project depending on ABIEOS Serialization Provider with [EOSIO SDK for Java](https://github.com/EOSIO/eosio-java) **must be an Android 6+ project**. If you need support for ABIEOS serialization on server side Java, please see the [Java ABIEOS Serialization Provider](https://github.com/EOSIO/eosio-java-abieos-serialization-provider) project. Other serialization providers, however, can be created to support earlier Android versions or other platforms. If your project requires earlier Android version or alternate platform support, or if you'd like to create a serialization provider and have questions, please reach out to us by [logging an issue](/../../issues/new).
 
 ## Installation
 
@@ -41,8 +41,8 @@ ABIEOS Serialization Provider is intended to be used in conjunction with [EOSIO 
 To use ABIEOS Serialization Provider with EOSIO SDK for Java in your app, add the following modules to your `build.gradle`:
 
 ```groovy
-implementation 'one.block:eosiojava:0.1.2'
-implementation 'one.block:eosiojavaandroidabieosserializationprovider:0.1.1'
+implementation 'one.block:eosiojava:1.0.0'
+implementation 'one.block:eosiojavaandroidabieosserializationprovider:1.0.0'
 ```
 
 You must also add the following to the `android` section of your application's `build.gradle`:
@@ -89,15 +89,23 @@ try {
 }
 ```
 
+You should explicitly destroy the provider's context (i.e. in a finally block), or you could run into a crash when multithreading, per this call:
+
+`abieos.destroyContext();`
+
 ## Android Example App
 
 If you'd like to see EOSIO SDK for Java: Android ABIEOS Serialization Provider in action, check out our open source [Android Example App](https://github.com/EOSIO/eosio-java-android-example-app)--a working application that fetches an account's token balance and pushes a transfer action.
 
 ## Releases
 
+10/15/20
+
+Version 0.1.3 This version adds support for newer Eosio 2.1 features.
+
 6/23/20
 
-Version 0.1.2 The version includes support for newer ABI versions.
+Version 0.1.2 This version includes support for newer ABI versions.
 
 2/27/20
 

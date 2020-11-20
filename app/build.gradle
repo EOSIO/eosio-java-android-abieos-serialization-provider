@@ -33,6 +33,11 @@ android {
 
     testOptions{
         unitTests.includeAndroidResources = true
+        unitTests.all {
+            testLogging {
+                events 'passed', 'skipped', 'failed'
+            }
+        }
     }
 
     // Needed to get bitcoin-j to produce a valid apk for android.
@@ -55,6 +60,6 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
     implementation project(':eosiojavaabieos')
-    implementation 'one.block:eosiojava:0.1.0'
+    implementation 'one.block:eosiojava:1.0.0'
     
 }
